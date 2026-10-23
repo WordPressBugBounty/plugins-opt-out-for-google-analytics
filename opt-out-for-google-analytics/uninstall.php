@@ -40,7 +40,7 @@
             // Remove all options
             $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_' . GAOO_PREFIX ) . '%' ) );
             $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( GAOO_PREFIX ) . '%' ) );
-            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_name LIKE %s", $wpdb->esc_like( GAOO_PREFIX ) . '%' ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", $wpdb->esc_like( GAOO_PREFIX ) . '%' ) );
 
             // Optimize DB
             $wpdb->query( "OPTIMIZE TABLE $wpdb->options" );

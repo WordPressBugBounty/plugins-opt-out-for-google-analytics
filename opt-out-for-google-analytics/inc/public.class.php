@@ -40,15 +40,25 @@
         public function enqueue_scripts() {
             $min = SCRIPT_DEBUG ? '' : '.min';
 
-            wp_register_script( 'gaoo-public', GAOO_PLUGIN_URL . '/assets/public' . $min . '.js', array(), false, true );
+            wp_register_script( 'gaoo-public', GAOO_PLUGIN_URL . '/assets/public' . $min . '.js', array(), GAOO_VERSION, true );
         }
 
         /**
-         * Handle the shortcode.
+         * Handle the shortcode. Also used to render the Gutenberg block.
+         *
+         * @param array|string $atts Shortcode attributes: link_deactivate, link_activate, popup_deactivate and popup_activate overwrite the texts from the settings. (Default: empty array)
          *
          * @return string HTML code or empty string on error.
          */
-        public function shortcode() {
+        public function shortcode( $atts = array() ) {
+            $atts = shortcode_atts( array(
+                'link_deactivate'  => '',
+                'link_activate'    => '',
+                'popup_deactivate' => '',
+                'popup_activate'   => '',
+            ), $atts, 'ga_optout' );
+
+            $atts      = array_map( 'trim', $atts );
             $form_data = GAOO_Utils::get_options();
             $ua_code   = GAOO_Utils::get_code( $form_data[ 'ga_plugin' ], $form_data[ 'ua_code' ] );
 
@@ -64,15 +74,35 @@
                 return '';
             }
 
+            // Block themes render the content before the hook 'wp_enqueue_scripts', so the script may not be registered yet.
+            if ( ! wp_script_is( 'gaoo-public', 'registered' ) ) {
+                $this->enqueue_scripts();
+            }
+
             wp_localize_script( 'gaoo-public', 'gaoo_data', $json_data );
             wp_enqueue_script( 'gaoo-public' );
 
             do_action( 'gaoo_before_shortcode', $ua_code, $current_status );
 
-            $html = '<a href="javascript:gaoo_handle_optout();" id="gaoo-link" class="gaoo-link-' . esc_attr( $current_status ) . '">' . esc_html( $json_data[ "link_" . $current_status ] ) . '</a>';
+            // Individual texts are passed to the JavaScript by data attributes, because there can be several links on one page.
+            $data_attributes = '';
+
+            foreach ( array( 'deactivate', 'activate' ) as $status ) {
+                if ( ! empty( $atts[ 'link_' . $status ] ) ) {
+                    $data_attributes .= ' data-gaoo-' . $status . '="' . esc_attr( $atts[ 'link_' . $status ] ) . '"';
+                }
+
+                if ( ! empty( $atts[ 'popup_' . $status ] ) ) {
+                    $data_attributes .= ' data-gaoo-popup-' . $status . '="' . esc_attr( $atts[ 'popup_' . $status ] ) . '"';
+                }
+            }
+
+            $link_text = empty( $atts[ 'link_' . $current_status ] ) ? $json_data[ 'link_' . $current_status ] : $atts[ 'link_' . $current_status ];
+            $html      = '<a href="#" role="button" id="gaoo-link" class="gaoo-link gaoo-link-' . esc_attr( $current_status ) . '"' . $data_attributes . '>' . esc_html( $link_text ) . '</a>';
 
             if ( ! empty( $form_data[ 'custom_css' ] ) && $this->csstidy->parse( $form_data[ 'custom_css' ] ) ) {
-                $html .= '<style type="text/css">' . $this->csstidy->print->plain() . '</style>';
+                // Strip HTML tags, so the code can't break out of the style element.
+                $html .= '<style type="text/css">' . wp_strip_all_tags( $this->csstidy->print->plain() ) . '</style>';
             }
 
             do_action( 'gaoo_after_shortcode', $ua_code, $current_status );
@@ -94,7 +124,7 @@
             }
 
             if ( ! empty( $form_data[ 'tracking_code' ] ) ) {
-                echo preg_replace( '/\s+/', ' ', stripslashes( $form_data[ 'tracking_code' ] ) );
+                echo $form_data[ 'tracking_code' ];
             }
 
             do_action( 'gaoo_after_head_script', $ua_code );

@@ -1,6 +1,9 @@
-<?php if ( ! $popup ): ?>
-    <div class="gaoo-promotion-wrap">
-<?php endif; ?>
+<?php
+    // If this file is called directly, abort.
+    defined( 'WPINC' ) || die;
+?>
+
+<div class="gaoo-promotion-wrap">
 
 <?php foreach ( $promo as $item ): ?>
 
@@ -11,12 +14,6 @@
     ?>
 
     <div class="gaoo-promotion-box">
-
-        <?php if ( $popup ): ?>
-            <h2 class="clearfix"><?php echo esc_html( $item[ 'title' ] ); ?>
-                <a href="<?php echo esc_url( add_query_arg( 'gaoo_promo', 1 ) ); ?>" title="<?php esc_attr_e( 'Close it for ever', 'opt-out-for-google-analytics' ); ?>">X</a>
-            </h2>
-        <?php endif; ?>
 
         <div class="gaoo-promotion-box-body">
 
@@ -43,6 +40,4 @@
 
 <?php endforeach; ?>
 
-<?php if ( ! $popup ): ?>
-    </div>
-<?php endif; ?>
+</div>

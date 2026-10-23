@@ -13,9 +13,6 @@ if ( ! class_exists( 'GAOO_Deactivator' ) ):
 		 * @param bool $network_wide Activation is network wide or not
 		 */
 		public static function init( $network_wide ) {
-			// Check if action is triggered by proper page.
-			check_admin_referer( 'deactivate-plugin_' . ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' ) );
-
 			global $wpdb;
 
 			// Run the deactivation with multisite support.

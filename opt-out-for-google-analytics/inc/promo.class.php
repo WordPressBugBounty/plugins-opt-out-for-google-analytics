@@ -9,11 +9,6 @@
     class GAOO_Promo {
 
         /**
-         * @var string $option_key_off Option name to store status
-         */
-        private static $option_key_off = GAOO_PREFIX . 'promotion_off';
-
-        /**
          * @var string $transient_key_cache Transient name for API cached data
          */
         private static $transient_key_cache = GAOO_PREFIX . 'data_cache';
@@ -29,39 +24,16 @@
         private static $url = 'https://www.schweizersolutions.com/wordpress.org/?p=opt-out-for-google-analytics';
 
         /**
-         * Enable the promotion box.
-         *
-         * @return bool
-         */
-        public static function enable() {
-            return delete_option( self::$option_key_off );
-        }
-
-        /**
-         * Check if promotion box is enabled.
-         *
-         * @return bool
-         */
-        public static function is_enabled() {
-            return empty( get_option( self::$option_key_off, 0 ) );
-        }
-
-        /**
-         * Disable the promotion box.
-         *
-         * @return bool
-         */
-        public static function disable() {
-            return update_option( self::$option_key_off, 1 );
-        }
-
-        /**
          * Clear cache for API response data.
          *
          * @return bool
          */
         public static function clear_cache() {
-            return delete_transient( self::$transient_key_cache ) && delete_transient( self::$transient_key_notices );
+            // Delete both, even if the first one does not exist (anymore).
+            $cache   = delete_transient( self::$transient_key_cache );
+            $notices = delete_transient( self::$transient_key_notices );
+
+            return $cache && $notices;
         }
 
         /**
@@ -80,7 +52,7 @@
                         continue;
                     }
 
-                    echo '<div class="notice notice-info is-dismissible">' . $promo[ 'notice' ] . '</div>';
+                    echo '<div class="notice notice-info is-dismissible">' . wp_kses_post( $promo[ 'notice' ] ) . '</div>';
                 }
 
                 set_transient( self::$transient_key_notices, time(), MONTH_IN_SECONDS * 3 );
@@ -109,17 +81,14 @@
          *
          * @param bool $pinned_only Render only the promotion which is pinned. (Default: false)
          * @param bool $echo Echo or return the HTML code. (Default: false)
-         * @param bool $popup Render the promotion in a popup box (Default: false)
          *
          * @return string HTML code on success, otherwise empty string.
          */
-        public static function render( $pinned_only = false, $echo = false, $popup = false ) {
+        public static function render( $pinned_only = false, $echo = false ) {
             $template = '';
             $data     = self::get_data();
 
             if ( is_array( $data ) ) {
-
-                $data[ 'popup' ] = $popup;
 
                 if ( $pinned_only ) {
                     $key = array_search( true, array_column( $data[ 'promo' ], 'pinned' ) );

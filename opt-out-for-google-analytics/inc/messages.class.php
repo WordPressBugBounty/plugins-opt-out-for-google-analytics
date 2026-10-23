@@ -12,7 +12,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 		 * BestLMS_Flash_Message constructor.
 		 */
 		protected function __construct() {
-			$this->setMessageContainer( '<div class="notice notice-%1$s is-dismissable">%2$s</div>' );
+			$this->setMessageContainer( '<div class="notice notice-%1$s is-dismissible">%2$s</div>' );
 			$this->setItemContainer( '<p>%1$s</p>' );
 		}
 

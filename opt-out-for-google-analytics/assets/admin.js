@@ -60,12 +60,12 @@ jQuery(function ($) {
 
     $('input[name="gaoo[ga_plugin]"]').change(function () {
         var $this = $(this),
-            $textarea_tracking_code = $('#ga-plugin-tracking-code').parent();
+            $manual_details = $('.gaoo-source-details');
 
         if ($this.val() != 'manual') {
-            $textarea_tracking_code.slideUp();
+            $manual_details.slideUp();
         } else {
-            $textarea_tracking_code.slideDown();
+            $manual_details.removeClass('hide').hide().slideDown();
         }
     });
 
@@ -74,7 +74,7 @@ jQuery(function ($) {
             $input_ua = $('#gaoo-ua-code');
 
         if (val.length && !$input_ua.val().trim().length) {
-            var matches = val.toString().match(/(G|UA|YT|MO)-[a-zA-Z0-9-]+/gmi);
+            var matches = val.toString().match(/\bG-[a-zA-Z0-9]+/gm);
 
             if (matches != null) {
                 $input_ua.val(matches.shift());
@@ -85,27 +85,32 @@ jQuery(function ($) {
     $('.gaoo-empty-popup').click(function () {
         var $this = $(this);
 
-        $this.prev('input[type="text"').val('');
-        $this.hide();
+        $this.prev('input[type="text"]').val('').trigger('focus');
+        $this.addClass('empty');
     });
 
-    $('.gaoo-clipboard').click(function () {
-        var $this = $(this);
+    // Show the button to empty the popup text again, if a text is entered.
+    $('.gaoo-input-clear input[type="text"]').on('input', function () {
+        $(this).next('.gaoo-empty-popup').toggleClass('empty', !$(this).val().length);
+    });
 
-        if (copyTextToClipboard($this.data('copy'))) {
-            $this.text(gaoo.text.copied);
+    $('.gaoo-copy').click(function () {
+        var $feedback = $('.gaoo-clipboard', this);
+
+        if (copyTextToClipboard($(this).data('copy'))) {
+            $feedback.text(gaoo.text.copied);
         } else {
-            $this.text(gaoo.text.notcopied);
+            $feedback.text(gaoo.text.notcopied);
         }
 
         // Delayed text unset
         setTimeout(function () {
-            $this.text('');
-        }, 600);
+            $feedback.text('');
+        }, 1500);
     });
 
-    $('code').click(function () {
-        $('.gaoo-clipboard').trigger('click');
+    $('.gaoo-shortcode code').click(function () {
+        $('.gaoo-copy').trigger('click');
     });
 });
 

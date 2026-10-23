@@ -3,7 +3,9 @@
      * Plugin Name: Opt-Out for Google Analytics (DSGVO / GDPR)
      * Plugin URI: https://www.schweizersolutions.com/?utm_source=wordpress&utm_medium=plugin&utm_campaign=plugin_uri
      * Description: Adds the possibility for the user to opt out from Google Analytics. The user will not be tracked by Google Analytics on this site until he allows it again, clears his cookies or uses a different browser.
-     * Version: 2.4
+     * Version: 2.5
+     * Requires at least: 5.8
+     * Requires PHP: 7.0
      * Author: Schweizer Solutions GmbH
      * Author URI: https://www.schweizersolutions.com/?utm_source=wordpress&utm_medium=plugin&utm_campaign=author_uri
      * License: GPL-2.0+
@@ -41,11 +43,15 @@
             require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'singleton.class.php';
             require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'messages.class.php';
 
-            require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'csstidy' . DIRECTORY_SEPARATOR . 'class.csstidy.php';
+            // Another plugin may have already loaded its own copy of CSSTidy.
+            if ( ! class_exists( 'csstidy' ) ) {
+                require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'csstidy' . DIRECTORY_SEPARATOR . 'class.csstidy.php';
+            }
 
             include_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'promo.class.php';
             include_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'admin.class.php';
             include_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'public.class.php';
+            include_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'block.class.php';
         }
 
         /**
@@ -57,10 +63,10 @@
 
             // Starts Classes
             new GAOO_Admin();
-            new GAOO_Public();
+            new GAOO_Block( new GAOO_Public() );
 
             // Load activator for MU support
-            add_action( 'wpmu_new_blog', array( new GAOO_Activator, 'new_blog' ) );
+            add_action( 'wp_initialize_site', array( new GAOO_Activator, 'new_blog' ), 100 );
         }
 
         /**

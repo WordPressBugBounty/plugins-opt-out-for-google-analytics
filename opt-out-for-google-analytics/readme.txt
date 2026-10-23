@@ -1,61 +1,62 @@
 === Opt-Out for Google Analytics (DSGVO / GDPR) ===
 Contributors: schweizersolutions
 Tags: google analytics, opt-out, dsgvo, gdpr, analytics
-Requires at least: 3.5
-Tested up to: 6.8.1
+Requires at least: 5.8
+Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 2.4
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.schweizersolutions.com/?utm_source=wordpressorg&utm_medium=plugin&utm_campaign=donate
 
-Allows the user to opt-out of Google Analytics tracking. DSGVO / GDPR.
+Lets your visitors opt out of Google Analytics tracking, as required by the GDPR (DSGVO).
 
 == Description ==
 
-The Basic Data Protection Regulation (DSGVO, EU-DSGVO, GDPR) stipulates that a site visitor must have the option to object to the collection by Google Analytics.
+The General Data Protection Regulation (GDPR, German: DSGVO) requires that website visitors can object to the collection of their data by Google Analytics.
 
-Until now, this was only possible via browser addon, or complicated JavaScript code embedding on the own website. With this plugin, this is child's play and the user also has the option to undo the objection.
+Until now, this was only possible with a browser add-on or with complicated JavaScript code on your own website. With this plugin, it is child's play, and visitors can also undo their objection at any time.
 
 **Features**
 
 * **Support for Google Analytics 4 (GA4)**
-* Full integration of the new WordPress DSGVO / GDPR features
-* Weekly check whether the settings are still data protection compliant!
-* Compatible with Google Tag Manager.
-* **NO other plugin needed** to use the Google Analytics code on the website. This can be integrated directly by this plugin.
-* Site visitors can deactivate the Google Analytics tracking for themselves and also activate it again afterward.
-* Link text for the activation and deactivation link can be changed individually.
-* A popup can be set up, which appears after clicking the link.
-* The UA-Code or GA4-Code can be entered manually or read out automatically by a Google Analytics tracking plugin (see compatible plugins).
-* HTML5 Local Storage Fallback: If a user deletes his cookies, the opt-out cookie can be restored if the local storage was not additionally deleted by the browser.
-* WordPress Multisite compatible.
-* Fully compatible with Gutenberg Editor.
-* Compatible with: [Advanced Custom Fields](https://de.wordpress.org/plugins/advanced-custom-fields/), [WPML](https://wpml.org/?utm_source=wordpressorg&utm_medium=opt-out-for-google-analytics), [Polylang](https://de.wordpress.org/plugins/polylang/) and [Loco Translate](https://de.wordpress.org/plugins/loco-translate/)
-* Also works on the smartphone, provided that the browser supports cookies.
-* Visual customizations through custom CSS codes that are loaded only together with the shortcode (optimized loading time).
-* Translation for DE and EN available.
-* Full support for PHP 8.1
+* Full integration with the privacy features of WordPress
+* Regular check (daily, weekly or monthly) whether the settings are still compliant with data protection law
+* Compatible with Google Tag Manager
+* **No other plugin needed** to add the Google Analytics code to your website. The plugin can add it for you.
+* Visitors can disable Google Analytics tracking for themselves and enable it again later.
+* The texts of the opt-out and opt-in link can be customized, also per block or shortcode.
+* An optional popup appears after clicking the link. Its texts can also be customized per block or shortcode.
+* The GA4 measurement ID (G-XXXXXXXXXX) can be entered manually or read automatically from a Google Analytics plugin (see compatible plugins).
+* Local storage fallback: If a visitor deletes their cookies, the opt-out cookie is restored, as long as the browser's local storage has not been cleared as well.
+* Compatible with WordPress Multisite
+* Gutenberg block with a preview, a warning if the link is not displayed, and settings for color, typography, spacing and alignment
+* Works with page caching: the link always shows the current status of the visitor.
+* Compatible with [Advanced Custom Fields](https://wordpress.org/plugins/advanced-custom-fields/), [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/), [WPML](https://wpml.org/?utm_source=wordpressorg&utm_medium=opt-out-for-google-analytics), [Polylang](https://wordpress.org/plugins/polylang/) and [Loco Translate](https://wordpress.org/plugins/loco-translate/)
+* Also works on smartphones, provided the browser supports cookies
+* Custom CSS to change the appearance. It is only loaded together with the link (optimized loading time).
+* Available in English and German
+* Full support for PHP 8 (tested up to PHP 8.3)
 
-**Regularly check whether the settings are still data protection compliant!**
+**Regular check whether the settings are still compliant with data protection law**
 
-Ever edited the privacy policy page and accidentally deleted the opt-out shortcode? Recently deleted the plugin for Google Analytics tracking, then reinstalled it and forgot to re-enable IP anonymization?
+Have you ever edited your privacy policy page and accidentally deleted the opt-out shortcode? Or removed your Google Analytics plugin, reinstalled it later and forgot to set up the tracking code again?
 
-To ensure the highest security, the plugin regularly checks the settings. Should a setting no longer fit, then an error message appears in the WP Admin (Backend / Dashboad) or you will receive an email.
-You can freely choose the frequency of the check. The following intervals are available: daily, weekly or monthly.
+To keep you on the safe side, the plugin checks the settings regularly. If a setting is no longer correct, an error message appears in the WordPress admin or you receive an email.
+You can choose how often the check runs: daily, weekly or monthly.
 
 The following settings are checked:
 
-* Opt-Out function enabled
-* Opt-Out shortcode present on the page
-* Page with the shortcode publicly available (published and no password protection)
-* Valid UA-Code found (only the formatting is checked)
-* IP anonymization enabled (Works only in conjunction with a compatible plugin or the tracking code is stored in the plugin)
+* Opt-out function is enabled
+* Opt-out shortcode or block is present on the page
+* The page with the shortcode or block is publicly available (published and not password protected)
+* A valid GA4 measurement ID was found (only the format is checked)
+* The cron job for the status check is active
 
-**Integrated compatibility with the following plugins**
+**Built-in compatibility with the following plugins**
 
-It is not a requirement to use the listed plugins! The Google Analytics Opt-Out Plugin is also compatible with other plugins and can be used even if the Google Analytics code itself was inserted.
-With integrated compatibility, we make work easier because the current UA-Code is automatically read out and kept up to date. This means that it does not have to be corrected manually.
+You do not need any of these plugins! The plugin also works with other plugins, or if you have added the Google Analytics code yourself.
+With the built-in compatibility, the current GA4 measurement ID is read automatically and kept up to date, so you never have to correct it manually.
 
 * [MonsterInsights Pro](https://www.monsterinsights.com/?utm_source=wordpressorg&utm_medium=opt-out-for-google-analytics)
 * [MonsterInsights – Google Analytics Dashboard for WordPress (Website Stats Made Easy)](https://wordpress.org/plugins/google-analytics-for-wordpress/)
@@ -64,340 +65,389 @@ With integrated compatibility, we make work easier because the current UA-Code i
 * [GA Google Analytics](https://wordpress.org/plugins/ga-google-analytics/)
 * [Site Kit by Google – Analytics, Search Console, AdSense, Speed](https://wordpress.org/plugins/google-site-kit/)
 
-**AUTOMATICALLY current privacy policy**
+**Privacy policy that is AUTOMATICALLY kept up to date**
 
-Keeping track of all the GDPR legislative changes is not easy. Especially not next to the core business. That's why we offer you a data protection generator with our partner [easyRechtssicher](https://schweizer.solutions/datenschutzgenerator).
-The privacy policy is created ONCE and automatically kept up to date in WordPress itself. No more filling out forms again and copying and pasting privacy statements onto the page, it's completely automated.
-More info here: [https://schweizer.solutions/datenschutzgenerator](https://schweizer.solutions/datenschutzgenerator)
+Keeping track of all changes in data protection law is not easy, especially alongside your core business. That's why we offer a privacy policy generator together with our partner [eRecht24](https://schweizer.solutions/erecht24).
+You create your privacy policy ONCE, and it is automatically kept up to date in WordPress. No more filling out forms and copying and pasting privacy statements: it is completely automated.
+More information: [https://schweizer.solutions/erecht24](https://schweizer.solutions/erecht24)
 
 **Do you like our plugin?**
-It motivates us a lot to keep working on our free plugins if you leave us a [positive review](https://wordpress.org/support/plugin/opt-out-for-google-analytics/reviews/#new-post).
+A [positive review](https://wordpress.org/support/plugin/opt-out-for-google-analytics/reviews/#new-post) motivates us a lot to keep working on our free plugins.
 
 **Coded with love by** [Schweizer Solutions GmbH](https://www.schweizersolutions.com/?utm_source=wordpressorg&utm_medium=plugin&utm_campaign=readme)
 
-*This plugin is not from Google and is not supported by Google in any way. Google Analytics is a trademark of Google LLC.*
+*This plugin is not made or supported by Google. Google Analytics is a trademark of Google LLC.*
 
 == Installation ==
 
-**Installation via Wordpress**
+**Installation in WordPress**
 
-1. Go to the Dashboard: `Plugins > Install`
-2. Search for: `Opt-Out for Google Analytics`
-3. click there on the gray button 'Install
-4. Activate the plugin
+1. In the admin, go to `Plugins > Add New Plugin`.
+2. Search for `Opt-Out for Google Analytics`.
+3. Click "Install Now".
+4. Activate the plugin.
 
 **Manual installation**
 
-1. Download the zip file here and unpack the folder
-2. Upload the directory `opt-out-for-google-analytics` into the `/wp-content/plugins/` directory of your WordPress installation
-3. Activate the plugin
+1. Download the ZIP file and unpack it.
+2. Upload the folder `opt-out-for-google-analytics` to the `/wp-content/plugins/` directory of your WordPress installation.
+3. Activate the plugin.
 
 **Configuration**
 
-1. Go to the Dashboard: 'Settings > GA Opt-Out
-2. Activate the plugin, if not activated
-3. Select the UA-Code or enter it into the field
-4. Save changes, done!
+1. In the admin, go to `Settings > GA Opt-Out`.
+2. Switch on "Enable Opt-Out function", if it is not enabled yet.
+3. Select the source of the GA4 measurement ID, or enter it manually.
+4. Save the changes. Done!
 
-**Note on UA-Code & GA4-Code:**
+**Note on the GA4 measurement ID**
 
-If you have entered the Google Analytics tracking code manually, e.g. with a WordPress theme, then you must enter the tracking code in the input field.
-If you have activated one of the compatible Google Analytics plugins, then this item is also selectable. This will automatically read the current tracking code from this plugin, and you do not have to enter it in the input field.
+If you added the Google Analytics tracking code yourself, e.g. in your theme, enter the measurement ID in the input field.
+If you use one of the compatible Google Analytics plugins, you can select it as the source. The plugin then reads the current measurement ID automatically, and you do not need to enter it.
 
 == Frequently Asked Questions ==
 
 = Why should I use this plugin? =
 
-The Data Protection Regulation (DSGVO, EU-DSGVO, GDPR) stipulates that a website visitor must have the option to object to the collection of data by Google Analytics.
-Until now, this was only possible via browser addon, or complicated JavaScript code integrations on the own website.
-With this plugin, this is very easy and the user also has the option to undo the objection.
+The General Data Protection Regulation (GDPR, German: DSGVO) requires that website visitors can object to the collection of their data by Google Analytics.
+Until now, this was only possible with a browser add-on or with complicated JavaScript code on your own website.
+With this plugin, it is very easy, and visitors can also undo their objection.
 
-= Is it the same opt-out code as from e-recht24.de? =
+= Is it the same opt-out code as the one from e-recht24.de? =
 
-Yes, because we also comply with Google's specifications. More information about the guidelines:  https://developers.google.com/analytics/devguides/collection/analyticsjs/user-opt-out
+Yes, because both follow Google's specifications for Google Analytics 4. More information: https://developers.google.com/tag-platform/security/guides/privacy#turn-off-analytics
 
-= I have manually inserted the Google Analytics tracking code via the theme / a plugin. Can I still use this plugin? =
+= I added the Google Analytics tracking code myself, in my theme or with another plugin. Can I still use this plugin? =
 
-This plugin can also be used if the tracking code was inserted manually at the theme or with the help of a plugin.
+Yes. The plugin also works if the tracking code was added to the theme manually or with another plugin.
 
-= Does the privacy policy need to be adapted? AUTOMATICALLY update? =
+= Do I need to update my privacy policy? Can it be updated AUTOMATICALLY? =
 
-Yes, it is recommended to offer the opt-out for Google Analytics in the privacy policy.
+Yes, we recommend offering the opt-out for Google Analytics in your privacy policy.
 
-Keeping track of all the GDPR legislative changes is not easy. Especially not next to your core business. That's why we offer you a data protection generator with our partner [easyRechtssicher](https://schweizer.solutions/datenschutzgenerator).
-The privacy policy is created ONCE and automatically kept up to date in WordPress itself. No more filling out forms again and copying and pasting privacy statements onto the site, it runs completely automated.
-More info here: [https://schweizer.solutions/datenschutzgenerator](https://schweizer.solutions/datenschutzgenerator)
+Keeping track of all changes in data protection law is not easy, especially alongside your core business. That's why we offer a privacy policy generator together with our partner [eRecht24](https://schweizer.solutions/erecht24).
+You create your privacy policy ONCE, and it is automatically kept up to date in WordPress. No more filling out forms and copying and pasting privacy statements: it is completely automated.
+More information: [https://schweizer.solutions/erecht24](https://schweizer.solutions/erecht24)
 
-= How long does the unsubscribe remain valid? =
+= How long does the opt-out remain valid? =
 
-If the site visitor clicks on the opt-out link to disable Google Analytics for him, then a cookie is set. With this cookie, the system knows that this site visitor should not be tracked on the website.
+When a visitor clicks the opt-out link, a cookie is set. This cookie tells the website not to track this visitor.
 
-This cookie is only valid in the browser with which the site visitor was on the website and clicked on the opt-out link. If the visitor uses a different browser, he would have to click on the link again.
+The cookie is only valid in the browser in which the visitor clicked the opt-out link. In a different browser, the visitor has to click the link again.
 
-If the site visitor clears his browser data (cookies, download history, etc.), the cookie is also deleted and the site visitor would have to click on the opt-out link again.
+If the visitor clears their browser data (cookies, history, etc.), the cookie is deleted as well, and they have to click the opt-out link again.
 
 = How do I deactivate the plugin? =
 
-You can deactivate the status of the plugin under "Settings > GA Opt-Out", there you only have to uncheck "Activate opt-out function".
+To turn off the opt-out function, go to `Settings > GA Opt-Out` and switch off "Enable Opt-Out function".
 
-You can deactivate the whole plugin under "Plugins > Installed Plugins" by clicking on "Deactivate" for the "Opt-Out for Google Analytics" Plugin.
+To deactivate the whole plugin, go to `Plugins > Installed Plugins` and click "Deactivate" below "Opt-Out for Google Analytics".
 
-After deactivating the plugin, you can remove it completely by clicking on "Delete".
+After deactivating the plugin, you can remove it completely by clicking "Delete".
 
 = Where can I use the shortcode? =
 
-You can use the shortcode `[gaoo_optout]` in posts, pages and widgets (text widget).
+You can use the shortcode `[ga_optout]` in posts, pages and widgets (text widget). In the block editor, you can also use the block "Opt-Out for Google Analytics".
 
-= Can I as a developer intervene in the plugin? =
+= Can I use different link and popup texts on one page? =
 
-Yes, you can. For this purpose we have included appropriate filters and action hooks.
+Yes. In the Gutenberg block, you can enter individual link and popup texts in the block settings. If you use the shortcode, add the texts as attributes:
 
-`// Before the shortcode is resolved
+`[ga_optout link_deactivate="Disallow tracking" link_activate="Allow tracking" popup_deactivate="Tracking is disabled." popup_activate="Tracking is enabled."]`
+
+If a text is empty, the text from the plugin settings is used.
+
+= Can developers customize the plugin? =
+
+Yes. The plugin provides the following actions and filters:
+
+`// Before the shortcode is rendered
 add_action( 'gaoo_before_shortcode', 'my_before_shortcode', 10, 2);
 
 function my_before_shortcode( $tracking_code, $current_status ) {
-	// $tracking_code - The current used tracking code "UA-XXXXX-Y" OR "G-XXXXXXXXXX"
-	// $current_status - The current status of the page visitor: activate or deactivate
+	// $tracking_code - The measurement ID in use: "G-XXXXXXXXXX"
+	// $current_status - The current status of the visitor: activate or deactivate
 }
 
-// After the shortcode is resolved
+// After the shortcode is rendered
 add_action( 'gaoo_after_shortcode', 'my_after_shortcode', 10, 2);
 
 function my_after_shortcode( $tracking_code, $current_status ) {
-	// $tracking_code - The current used tracking code "UA-XXXXX-Y" OR "G-XXXXXXXXXX"
-	// $current_status - The current status of the page visitor: activate or deactivate
+	// $tracking_code - The measurement ID in use: "G-XXXXXXXXXX"
+	// $current_status - The current status of the visitor: activate or deactivate
 }
 
-// Before the JS code, to disable GA, is issued
+// Before the JavaScript code that disables GA is output
 add_action( 'gaoo_before_head_script', 'my_before_script', 10, 1);
 
 function my_before_script( $tracking_code ) {
-	// $tracking_code - The current used tracking code "UA-XXXXX-Y" OR "G-XXXXXXXXXX"
+	// $tracking_code - The measurement ID in use: "G-XXXXXXXXXX"
 }
 
-// After the JS code, to disable GA, is issued
+// After the JavaScript code that disables GA is output
 add_action( 'gaoo_after_head_script', 'my_after_script', 10, 1);
 
 function my_after_script( $tracking_code ) {
-	// $tracking_code - The current used tracking code "UA-XXXXX-Y" OR "G-XXXXXXXXXX"
+	// $tracking_code - The measurement ID in use: "G-XXXXXXXXXX"
 }
 
-// The UA-Code used
+// The GA4 measurement ID in use
 add_filter( 'gaoo_get_ua_code', 'my_ga_tracking_code', 10, 2 );
 
 function my_ga_tracking_code( $tracking_code, $ga_plugin ) {
-	// $tracking_code - The current used tracking code "UA-XXXXX-Y" OR "G-XXXXXXXXXX"
-	// $ga_plugin - Selected source for the tracking code
+	// $tracking_code - The measurement ID in use: "G-XXXXXXXXXX"
+	// $ga_plugin - The selected source of the measurement ID
 }
 
 // Whether the page should be reloaded after the click
 add_filter( 'gaoo_force_reload', 'my_force_reload', 10, 1);
 
 function my_force_reload( $force ) {
-	// $force - "true" = force reload; "false" = do not reload
+	// $force - "true" = reload the page; "false" = do not reload
 }
 `
 
-= My theme does not resolve shortcodes. How can I use the function via PHP? =
+= My theme does not render shortcodes. How can I add the link with PHP? =
 
-It happens that some self-developed themes do not resolve shortcodes and the plugin does not work.
-To execute the shortcode anyway, you have to use this code in the theme, at the desired position:
+Some custom themes do not render shortcodes, so the link is not displayed.
+In this case, add the following code to your theme at the desired position:
 
 `echo do_shortcode('[ga_optout]');`
 
-= It is displayed that the settings are not correct, although I have changed them! =
+= The status check reports a problem, although I have already fixed it! =
 
-If the settings have been changed, e.g. in a compatible Google Analytics tracking plugin, then this change will only be noticed during the autom. check (weekly).
+If you changed a setting, e.g. in a compatible Google Analytics plugin, the change is only detected during the next automatic check (daily, weekly or monthly, depending on your settings).
 
-It is possible to perform the check beforehand. To do this, the "Save changes" button would have to be clicked under "Settings > GA Opt-Out".
+You can run the check right away: go to `Settings > GA Opt-Out` and click "Save Changes".
 
-This will read the new settings and save them for a week until the next automatic check.
+The plugin then reads the new settings and keeps the result until the next automatic check.
 
 = How can I react to the clicks, e.g. with another plugin? =
 
-The JavaScript event `gaoptout` is fired on the `window` object, which can be reacted to.
+The plugin fires the JavaScript event `gaoptout` on the `window` object.
 
-If the page visitor clicks on the link to perform an opt-out, then a `false` is passed as the value. If the visitor performs an opt-in, then a `true` is passed.
+If the visitor clicks the link to opt out, `event.detail` is `true`. If the visitor opts in again, it is `false`.
 
-Example code:
-`jQuery(window).on('gaoptout', function (e) { console.log(e.detail); });`
+Example:
+`window.addEventListener('gaoptout', function (e) { console.log(e.detail); });`
+
+With jQuery, the value is available in `e.originalEvent.detail`.
 
 = How do I change the appearance of the link? =
 
-You have the possibility to change the appearance of the link via CSS in the settings of the plugin. For this purpose, the following CSS classes are available:
+You can change the appearance of the link with custom CSS in the plugin settings. The following CSS classes are available:
 
 **The link itself:**
-`#gaoo-link { ... }`
+`.gaoo-link { ... }`
 
-**The link if the page visitor has disagreed with the tracking:**
+The ID `#gaoo-link` still works for compatibility, but please use the CSS class. The ID is not unique if the link is used several times on one page.
+
+**The link if the visitor has opted out of tracking:**
 `.gaoo-link-activate { ... }`
 
-**The link if the page visitor has NOT disagreed with the tracking:**
+**The link if the visitor has NOT opted out of tracking:**
 `.gaoo-link-deactivate { ... }`
 
-= How can I send the status messages to multiple email addresses? =
+= How can I send the status emails to multiple addresses? =
 
-You can enter several recipient addresses, separated by a comma, into the input field for the e-mail, which should receive the status message.
+Enter several email addresses, separated by commas, in the email field of the status check.
 Example: `webmaster@example.org,admin@example.org,dev@example.org`
 
-= I do not receive emails about the status check? =
+= Why don't I receive emails from the status check? =
 
-The status check runs in the set interval and only sends e-mails if at least one status is set to red.
-If you still do not receive any e-mails, it can have the following causes:
+The status check runs at the selected interval and only sends an email if at least one check has failed.
+If you still do not receive any emails, there may be the following reasons:
 
-- The e-mail has landed in your spam folder. Please check this before and save the sender address in your contact book, this will prevent the emails from ending up in spam.
-- You have deactivated the cronjob of WordPress in the wp-config.php. Please make sure that the server-side cronjob works correctly.
-- You are using a caching plugin on the installation. If there is no server-side cronjob set up, WordPress will check if there are tasks pending on every page load. If the page is called from the cache, then this is no longer done and no cronjob can be triggered.
-- You have too few page visitors who call your website in too large time intervals. Thus the cronjob of WordPress is not triggered.
+- The email ended up in your spam folder. Please check your spam folder and add the sender address to your contacts, so future emails do not end up in spam.
+- You have disabled the WordPress cron in the wp-config.php. Please make sure that a server-side cron job is set up and working.
+- You use a caching plugin. Without a server-side cron job, WordPress checks for pending tasks on every page load. If the page is delivered from the cache, this check does not happen, and the cron job is not triggered.
+- Your website has only a few visitors, with long gaps between visits. In this case, the WordPress cron is rarely triggered.
 
-Our recommendation is therefore:
+We therefore recommend:
 
-- Set up a server-side cronjob
-- Save the sender address in your contact book
+- Set up a server-side cron job.
+- Add the sender address to your contacts.
 
-= Use Google Tag Manager =
+= How do I use the plugin with Google Tag Manager? =
 
-The opt-out cookie is set according to Google's specifications. Thus, the GTM (Google Tag Manager) should not need to be adjusted.
-However, if the Google Analytics code is not loaded at all, the GTM must check whether the cookie is set or whether the value in the "HTML5 Local Storage" is set accordingly.
-On this basis, it can be decided in the GTM whether the code should be loaded or not.
+The opt-out cookie is set according to Google's specifications, so Google Tag Manager (GTM) usually does not need to be adjusted.
+However, if you want to prevent the Google Analytics code from loading at all, GTM must check whether the cookie or the local storage entry is set.
+Based on this, GTM can decide whether to load the code.
 
-If no entry or cookie is present, then no opt-out has taken place. This is also the case if the value "false" is returned.
-The opt-out has only taken place if the value "true" is returned.
+If there is no cookie or local storage entry, or if its value is "false", the visitor has not opted out.
+The visitor has only opted out if the value is "true".
 
-Specific cookie, with the corresponding tracking code: ga-disable-UA-XXXXX-YY or ga-disable-G-XXXXXXXXX
-Generic Cookie: ga-opt-out
+Specific cookie for your measurement ID: ga-disable-G-XXXXXXXXXX
+Generic cookie: ga-opt-out
 
-Specific entry in the HTML5 Local Storage:  ga-disable-UA-XXXXX-YY or ga-disable-G-XXXXXXXXX
-Generic entry in the HTML5 Local Storage: ga-opt-out
+Specific local storage entry: ga-disable-G-XXXXXXXXXX
+Generic local storage entry: ga-opt-out
 
 = Liability / Disclaimer =
 
-The use of this plugin is at your own risk. The website operator must be able to ensure the functionality of the plugin itself.
-To do this, it must be checked, among other things, whether after clicking on the link, a cookie in this format was set: ga-disable-UA-XXXXXXXX-YY
-Supporting, for the Google Tag Manager, another cookie with the name "ga-opt-out" is set.
+You use this plugin at your own risk. As the website operator, you are responsible for making sure that the plugin works on your website.
+Among other things, check whether a cookie in the format ga-disable-G-XXXXXXXXXX is set after clicking the link.
+For Google Tag Manager, an additional cookie named "ga-opt-out" is set.
 
 == Screenshots ==
 
-1. Settings overview of the plugin (Dashboard: Settings > GA Opt-Out).
-2. Shortcode inserted in the text editor
-3. Activation / deactivation link with popup, on the page
+1. Settings page of the plugin (Settings > GA Opt-Out)
+2. Shortcode inserted in the classic editor
+3. Opt-out link with popup on the website
 4. Example of a status email
-5. Block in Gutenberg editor
-6. Dashboard widget
+5. Block in the block editor, with individual link and popup texts
+6. Dashboard widget with the status check
 
 == Changelog ==
 
+= 2.5 =
+* Security: Only users with the "unfiltered_html" capability can change the tracking code (relevant for multisite).
+* Security: Hardened the output of the custom CSS, the link texts and the promotion data.
+* Added: The Gutenberg block shows a preview of the link and a warning if the link is not displayed on the website.
+* Added: Settings for color, typography, spacing and text alignment in the Gutenberg block.
+* Added: Individual link and popup texts per block or per shortcode: [ga_optout link_deactivate="..." link_activate="..." popup_deactivate="..." popup_activate="..."]
+* Added: Compatibility with Secure Custom Fields. The status check also finds the shortcode in its fields.
+* Updated: New, modern design of the settings page.
+* Updated: New, modern design of the dashboard widget.
+* Updated: The Gutenberg block is now rendered dynamically and is translatable. Existing blocks keep working and are migrated automatically when edited.
+* Updated: The link has the new CSS class "gaoo-link". Please use it instead of the ID "#gaoo-link", which still works for compatibility.
+* Updated: The minimum required WordPress version is now 5.8.
+* Updated: Support for WordPress 7.1.
+* Fixed: The opt-out link did not work with block themes (e.g. Twenty Twenty-Five), because the JavaScript data was missing.
+* Fixed: With page caching, the opt-out link could show the wrong status. The link now always shows the current status, also if it is used several times on one page.
+* Fixed: The admin notice was shown when everything was fine, and hidden when there were problems. Thanks to @greenlightsolutions for reporting!
+* Fixed: The plugin could not be deactivated with the bulk action or with WP-CLI.
+* Fixed: Fatal error if another plugin also loads the CSSTidy library.
+* Fixed: Site Kit by Google: the GA4 measurement ID is now read correctly.
+* Fixed: The opt-out link no longer depends on a global JavaScript variable from the header script.
+* Fixed: The CSS class of the opt-out link is now updated correctly in both directions.
+* Fixed: PHP warning in the status check with Advanced Custom Fields if the page has no fields.
+* Fixed: Invalid email addresses for the status emails were silently changed or removed. They are now validated, and an error message is shown.
+* Fixed: Multisite: the links to install a compatible Google Analytics plugin lost the search query. The links are now only shown if the user is allowed to install or activate plugins.
+* Fixed: Multisite: new sites did not get the status check cron job when the plugin is network activated.
+* Fixed: The status check cron job was not created when the plugin was activated with WP-CLI.
+* Fixed: The status check is now updated when the privacy policy page is saved.
+* Fixed: Cached data is now reliably cleared after a plugin update, regardless of the update method.
+* Fixed: The admin styles of the plugin affected code elements on all admin pages.
+* Removed: Support for Universal Analytics (UA-XXXXXX-Y). Google has shut down Universal Analytics, so only Google Analytics 4 (G-XXXXXXXXXX) is supported.
+* Removed: The status check "IP anonymization is enabled". Google Analytics 4 does not log or store IP addresses.
+* Removed: Unused code and files.
+
 = 2.4 =
-* Updated: Support for WordPress 6.8.1
+* Updated: Support for WordPress 6.8.1.
 
 = 2.3 =
-* Fixed: Analytify - Detection of whether IP anonymization is activated
-* Updated: CSStidy library to v2.1.0
-* Updated: Support for WordPress 6.5
-* Updated: readme.txt
+* Updated: CSSTidy library to version 2.1.0.
+* Updated: Support for WordPress 6.5.
+* Updated: readme.txt.
+* Fixed: Analytify: detection of whether IP anonymization is enabled.
 
 = 2.2 =
-* Fix: Paste tracking code in manual mode will now read GA4 id from JavaScript code and automatically insert it into input field, if it is empty.
-* Tweaks: Optimized code and UX.
-* Updated: Support for WordPress 6.2
-* Updated: Support for PHP 8.1
+* Updated: Support for WordPress 6.2.
+* Updated: Support for PHP 8.1.
+* Improved: Optimized code and user experience.
+* Fixed: When a tracking code is pasted in manual mode, the GA4 ID is now read from the JavaScript code and inserted into the input field automatically, if the field is empty.
 
 = 2.1 =
-* Updated: readme.txt
-* Updated: Support for WordPress 6.0.2
-* Updated: CSStidy library to v2.0.0
-* Updated: Integration of all supported GA tracking plugins
+* Updated: Support for WordPress 6.0.2.
+* Updated: CSSTidy library to version 2.0.0.
+* Updated: Integration of all supported Google Analytics plugins.
+* Updated: readme.txt.
 
 = 2.0 =
-* Added: Support for Google Analytics 4 (GA4)
-* Added: MonsterInsights GA4 support
-* Added: ExactMetrics GA4 support
-* Added: Analytify GA4 support
-* Added: GA Google Analytics GA4 support
-* Updated: Support for WordPress 5.9
-* Tweaks: Several code tweaks & cleanup
+* Added: Support for Google Analytics 4 (GA4).
+* Added: GA4 support for MonsterInsights.
+* Added: GA4 support for ExactMetrics.
+* Added: GA4 support for Analytify.
+* Added: GA4 support for GA Google Analytics.
+* Updated: Support for WordPress 5.9.
+* Improved: Several code improvements and cleanup.
 
 = 1.9 =
-* Updated: Support for WordPress 5.8
-* Updated: Compatibility of all supported Google Analaytics tracking plugins.
-* Fixed: System directory separator was not used in constants.
-* Changed: Increase version in dependencies check on plugin activation.
+* Updated: Support for WordPress 5.8.
+* Updated: Compatibility with all supported Google Analytics plugins.
+* Changed: Raised the required versions in the dependency check on plugin activation.
+* Fixed: The system directory separator was not used in the constants.
 
 = 1.8 =
-* Added: Dashboard widget with the current status of the website. Can be disabled in the plugin settings.
-* Added: Remove languages files of this plugin after uninstall, if the option "Keep data after uninstallation" is not enabled.
-* Changed: Code for the translation and removed the language files from plugin. Use the native translate.wordpress.org service for the translations.
-* Updated: Names of the supported Google Analytics tracking plugins.
+* Added: Dashboard widget with the current status of the website. It can be disabled in the plugin settings.
+* Added: The language files of this plugin are removed on uninstall, if the option "Keep data after uninstall" is not enabled.
+* Changed: The translation code. The language files were removed from the plugin, the translations are now provided by translate.wordpress.org.
+* Updated: Names of the supported Google Analytics plugins.
 
 = 1.7 =
-* Added: Option in settings to keep data after uninstallation.
-* Added: Close button to promo popup for better usability.
-* Fixed: After deleting the plugin, the data was not deleted.
+* Added: Option in the settings to keep the data after uninstall.
+* Added: Close button for the promotion popup, for better usability.
+* Fixed: The data was not deleted after the plugin was deleted.
 
 = 1.6 =
-* Updated: Support for PHP 8
-* Updated: Support for WordPress 5.7
-* Updated: Compatibility to all supported analytics plugins
-* Improved: Gutenberg Block support for the Opt-Out Block
-* Improved: Some links, design and a better mobile usability with the plugin settings page.
-* Improved: PHP code and security
-* Updated: CSSTidy from 1.7.0 to 1.7.3
-* Changed: If the promotion box is hidden for ever, it will take effect for the whole installation and not per user.
-* Fixed: In some cases the plugin text was not displayed in the right language from the user
-* Fixed: Unexpected changes in some cases in the .htaccess file (thanks to @danielrufde)
+* Updated: Support for PHP 8.
+* Updated: Support for WordPress 5.7.
+* Updated: Compatibility with all supported Google Analytics plugins.
+* Updated: CSSTidy from version 1.7.0 to 1.7.3.
+* Improved: Gutenberg support for the opt-out block.
+* Improved: Some links, the design and the mobile usability of the settings page.
+* Improved: PHP code and security.
+* Changed: If the promotion box is hidden permanently, this now applies to the whole installation instead of per user.
+* Fixed: In some cases, the plugin texts were not displayed in the language of the user.
+* Fixed: Unexpected changes to the .htaccess file in some cases (thanks to @danielrufde).
 
 = 1.5 =
-* Added: Support for Site Kit by Google
-* Added: Output the current UA-Code in status check
-* Added: Send status mail to WordPress admin mail (auto-sync)
-* Updated: Compatibility to new version of "Google Analytics Dashboard for WP by ExactMetrics (formerly GADWP)", with backward support for older versions
-* Updated: Compatibility to new version of "Google Analytics Dashboard Plugin for WordPress by Analytify", with backward support for older versions
-* Fixed: German translations
+* Added: Support for Site Kit by Google.
+* Added: The current UA code is shown in the status check.
+* Added: Send the status email to the WordPress admin email address (automatic sync).
+* Updated: Compatibility with the new version of "Google Analytics Dashboard for WP by ExactMetrics" (formerly GADWP), with backward compatibility for older versions.
+* Updated: Compatibility with the new version of "Google Analytics Dashboard Plugin for WordPress by Analytify", with backward compatibility for older versions.
+* Fixed: German translations.
 
 = 1.4 =
-* Added: Support for Gutenberg
-* Added: Support for ACF Plugin, to check if the shortcode exist in the fields
-* Added: Send e-mail if the status check has detected an error.
-* Added: The intervall for the status check can now be changed.
-* Added: Add  Google Analytics to the whole website if the option "UA-Code" is set to manual.
-* Added: Custom JavaScript event on window object to allow other plugins to react if a user clicks on the link.
-* Added: User can add custom css in the settings, which is only loaded if the shortcode is used.
-* Fixed: Used wrong version variable to compare if WordPress has the new GDPR features.
-* Fixed: Only redirect after activation if plugin is activated single and not in bulk
-* Fixed: apply_filters for the link text did not affect on initinal page load.
-* Updated: Changed the link to the new data processing agreement for Google Analytics page.
-* Improved: Edit link from the "Privacy Policy Page" select has now the link to the current selected page, to open
-* Improved: Some usability features & security fixes
-* Improved: Move json data generation into a static function, so developers can enqueue scripts on every site they want.
+* Added: Support for Gutenberg.
+* Added: Support for the ACF plugin, to check whether the shortcode is used in its fields.
+* Added: An email is sent if the status check detects an error.
+* Added: The interval of the status check can now be changed.
+* Added: Google Analytics can be added to the whole website if the UA code is entered manually.
+* Added: Custom JavaScript event on the window object, so other plugins can react when a visitor clicks the link.
+* Added: Custom CSS in the settings, which is only loaded if the shortcode is used.
+* Updated: The link to the Google Analytics page about the data processing agreement.
+* Improved: The edit link next to the "Privacy Policy Page" selection now opens the currently selected page.
+* Improved: Usability and security.
+* Improved: The JSON data is now generated by a static function, so developers can enqueue the scripts on any page.
+* Fixed: The wrong version variable was used to check whether WordPress has the new GDPR features.
+* Fixed: The redirect after activation now only happens if the plugin is activated on its own, not in bulk.
+* Fixed: The filter for the link text did not apply on the initial page load.
 
 = 1.3 =
-* Added: Support for WordPress 4.9.6 GDPR - Icons for the shortcode on the privacy page & sync. the page id for the shortcode.
-* Added: Check if the page with the shortcode is accessibile
-* Added: MonsterInsights Pro support
-* Added: WPML & Polylang compatibility
-* Added: HTML5 local storage fallback. Cookies deleted, but the local storage not, restore cookie.
-* Added: Possibility to disable the notice on dashboard, the settings aren't right.
-* Added: Possibility to force page reload, after link click.
+* Added: Support for the GDPR features of WordPress 4.9.6: icon for the shortcode on the privacy page and sync of the page ID for the shortcode.
+* Added: Check whether the page with the shortcode is accessible.
+* Added: Support for MonsterInsights Pro.
+* Added: Compatibility with WPML and Polylang.
+* Added: Local storage fallback: if the cookies were deleted but the local storage was not, the cookie is restored.
+* Added: Option to disable the dashboard notice if the settings are not correct.
+* Added: Option to force a page reload after clicking the link.
 * Added: "Google Tag Manager" as an option.
-* Improved Google Tag Manager support: Set generic cookie named "ga-opt-out" if user clicked opt-out. Allows yout to copy and paste the code in GTM, no need to change the UA-Code.
-* Fix: PHP error generated on older PHP (<5.3) versions
-* Several code and usability optimazation
+* Improved: Support for Google Tag Manager: a generic cookie named "ga-opt-out" is set when a visitor opts out. You can copy the code into GTM without changing the UA code.
+* Improved: Several code and usability optimizations.
+* Fixed: PHP error on older PHP versions (< 5.3).
 
 = 1.2 =
-* Fixed: Activation immediately after installation generated a warning message
-* Changed: The message, if the settings aren't data protection compliant, is now only visible to the admins and super admins
-* Added: Backward compatibility for older "Google Analytics Dashboard for WP (GADWP)" versions
-* Added: Some status checks are now linked to the specific page. You are now one click away to enable the ip anonymization!
+* Added: Backward compatibility with older versions of "Google Analytics Dashboard for WP (GADWP)".
+* Added: Some status checks now link to the related settings page. Enabling IP anonymization is now just one click away.
+* Changed: The message about settings that are not compliant with data protection law is now only visible to admins and super admins.
+* Fixed: Activating the plugin directly after installation caused a warning message.
 
 = 1.1 =
-* Removed "Google Analytics by Yoast" integration
-* Fixed "Google Analytics Dashboard for WP (GADWP)" integration
-* Added "GA Google Analytics" integration
-* Added "Google Analytics for WordPress by MonsterInsights" integration
-* Added validation check for the UA code
-* Added monitoring feature: Check weekly if the settings are data protection compliant. If not, a message appears in WP admin.
-* Several code, security and usability optimazation
+* Added: Integration of "GA Google Analytics".
+* Added: Integration of "Google Analytics for WordPress by MonsterInsights".
+* Added: Validation of the UA code.
+* Added: Monitoring: a weekly check whether the settings are compliant with data protection law. If not, a message appears in the WordPress admin.
+* Improved: Several code, security and usability optimizations.
+* Fixed: Integration of "Google Analytics Dashboard for WP (GADWP)".
+* Removed: Integration of "Google Analytics by Yoast".
 
 = 1.0 =
-* 15. Februar 2016
-* Initial Release
+* Initial release on February 15, 2016.
+
+== Upgrade Notice ==
+
+= 2.5 =
+Universal Analytics (UA-) codes are no longer supported. If you still use a UA code, switch to your Google Analytics 4 measurement ID (G-XXXXXXXXXX). Otherwise, the opt-out link will not be displayed.

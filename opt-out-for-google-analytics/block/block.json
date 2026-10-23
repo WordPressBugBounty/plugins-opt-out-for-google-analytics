@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "gaoo/block",
+    "title": "Opt-Out for Google Analytics",
+    "description": "Displays the link, which allows the visitor to disallow or allow the tracking by Google Analytics.",
+    "category": "widgets",
+    "icon": "chart-area",
+    "keywords": [
+        "opt out",
+        "optout",
+        "opt-out",
+        "google",
+        "google analytics",
+        "gdpr",
+        "dsgvo"
+    ],
+    "textdomain": "opt-out-for-google-analytics",
+    "attributes": {
+        "linkDeactivate": {
+            "type": "string",
+            "default": ""
+        },
+        "linkActivate": {
+            "type": "string",
+            "default": ""
+        },
+        "popupDeactivate": {
+            "type": "string",
+            "default": ""
+        },
+        "popupActivate": {
+            "type": "string",
+            "default": ""
+        },
+        "textAlign": {
+            "type": "string"
+        }
+    },
+    "supports": {
+        "html": false,
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {},
+    "editorScript": "gaoo-block-editor"
+}

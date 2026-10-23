@@ -3,6 +3,26 @@ if (typeof gaoo_data !== 'undefined' && document.cookie.indexOf(gaoo_data.disabl
   gaoo_create_cookie();
 }
 
+// Handle the clicks on the links, so the individual texts of the clicked link can be used.
+document.addEventListener('click', function (event) {
+  var link = event.target.closest ? event.target.closest('.gaoo-link') : null;
+
+  if (link && typeof gaoo_data !== 'undefined') {
+    event.preventDefault();
+    gaoo_handle_optout(link);
+  }
+});
+
+// Show the current status on the links, because the page could be delivered from a cache.
+if (typeof gaoo_data !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', gaoo_update_links);
+  }
+  else {
+    gaoo_update_links();
+  }
+}
+
 function gaoo_localstorage(method, name, value) {
   try {
     if ('localStorage' in window && window['localStorage'] !== null) {
@@ -39,33 +59,55 @@ function gaoo_create_cookie() {
   gaoo_localstorage('set', gaoo_data.generic_disable_string, true);
 }
 
-function gaoo_handle_optout() {
-  var link = document.getElementById('gaoo-link');
+function gaoo_update_links() {
+  var is_disabled = document.cookie.indexOf(gaoo_data.disable_string + '=true') > -1,
+    links = document.querySelectorAll('.gaoo-link');
 
-  if (document.cookie.indexOf(disableStr + '=true') > -1) {
+  for (var i = 0; i < links.length; i++) {
+    // Individual link texts of the block / shortcode, otherwise the texts from the settings.
+    links[i].textContent = is_disabled ? (links[i].getAttribute('data-gaoo-activate') || gaoo_data.link_activate) : (links[i].getAttribute('data-gaoo-deactivate') || gaoo_data.link_deactivate);
+    links[i].className = links[i].className.replace(/\bgaoo-link-(de)?activate\b/, is_disabled ? 'gaoo-link-activate' : 'gaoo-link-deactivate');
+  }
+}
+
+// Returns the text of the popup: individual text of the clicked link, otherwise the text from the settings.
+function gaoo_popup_text(link, status) {
+  var text = link && link.getAttribute ? link.getAttribute('data-gaoo-popup-' + status) : null;
+
+  if (text) {
+    return text;
+  }
+
+  return gaoo_data.hasOwnProperty('popup_' + status) ? gaoo_data['popup_' + status] : '';
+}
+
+function gaoo_handle_optout(link) {
+  var popup;
+
+  if (document.cookie.indexOf(gaoo_data.disable_string + '=true') > -1) {
     gaoo_remove_cookie();
 
-    if (gaoo_data.hasOwnProperty('popup_activate')) {
-      alert(gaoo_data.popup_activate);
+    popup = gaoo_popup_text(link, 'activate');
+
+    if (popup) {
+      alert(popup);
     }
 
     window.dispatchEvent(new CustomEvent('gaoptout', {detail: false}));
-
-    link.innerHTML = gaoo_data.link_deactivate;
   }
   else {
     gaoo_create_cookie();
 
-    if (gaoo_data.hasOwnProperty('popup_deactivate')) {
-      alert(gaoo_data.popup_deactivate);
+    popup = gaoo_popup_text(link, 'deactivate');
+
+    if (popup) {
+      alert(popup);
     }
 
     window.dispatchEvent(new CustomEvent('gaoptout', {detail: true}));
-
-    link.innerHTML = gaoo_data.link_activate;
   }
 
-  link.className = link.className.replace(/\b-deactivate\b/, '-activate');
+  gaoo_update_links();
 
   if (gaoo_data.hasOwnProperty('force_reload') && gaoo_data.force_reload == true) {
     location.reload();

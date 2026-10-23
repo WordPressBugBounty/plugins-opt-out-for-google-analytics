@@ -127,12 +127,12 @@
         }
 
         /**
-         * Returns the UA- or G-Code
+         * Returns the G-Code (Google Analytics 4)
          *
-         * @param string $ga_plugin Key (monsterinsights, gadash, analytify, manual) of choosen GA Plugin
-         * @param string $ua_code   The UA-Code if GA Plugin is set to manual (Default: null)
+         * @param string $ga_plugin Key (monsterinsights, gadash, analytify, gaga, sitekit, manual) of choosen GA Plugin
+         * @param string $ua_code   The G-Code if GA Plugin is set to manual (Default: null)
          *
-         * @return string The UA- or G-Code (UA-XXXXXX-Y or G-XXXXXXXXXX)
+         * @return string The G-Code (G-XXXXXXXXXX)
          */
         public static function get_code( $ga_plugin, $ua_code = null ) {
 
@@ -144,40 +144,13 @@
                         $ua_code = monsterinsights_get_v4_id_to_output();
                     }
 
-                    if ( function_exists( 'monsterinsights_get_ua_to_output' ) && empty( $ua_code ) ) {
-                        $ua_code = monsterinsights_get_ua_to_output();
-                    }
-
                     break;
 
                 case 'gadash':
                     $ua_code = null;
 
-                    // backward compatibility to older versions
-                    if ( function_exists( 'GADWP' ) ) {
-                        $gadwp = GADWP();
-
-                        $profiles_list = $gadwp->config->options[ 'ga_profiles_list' ];
-                        $tableid       = $gadwp->config->options[ 'tableid_jail' ];
-
-                        // backwards compatibility for older versions. New version renamed options.
-                        if ( empty( $profiles_list ) ) {
-                            $profiles_list = $gadwp->config->options[ 'ga_dash_profile_list' ];
-                        }
-
-                        if ( empty( $tableid ) ) {
-                            $tableid = $gadwp->config->options[ 'ga_dash_tableid_jail' ];
-                        }
-
-                        $profile_info = GADWP_Tools::get_selected_profile( $profiles_list, $tableid );
-                        $ua_code      = $profile_info[ 2 ];
-                    }
-                    elseif ( function_exists( 'exactmetrics_get_v4_id' ) ) {
+                    if ( function_exists( 'exactmetrics_get_v4_id' ) ) {
                         $ua_code = exactmetrics_get_v4_id();
-                    }
-
-                    if ( function_exists( 'exactmetrics_get_ua' ) && empty( $ua_code ) ) {
-                        $ua_code = exactmetrics_get_ua();
                     }
 
                     break;
@@ -208,10 +181,10 @@
 
                 case 'sitekit':
 
-                    $analytics = get_option( 'googlesitekit_analytics_settings' );
+                    $analytics = get_option( 'googlesitekit_analytics-4_settings' );
 
-                    if ( ! empty( $analytics ) && ! empty( $analytics[ 'propertyID' ] ) ) {
-                        $ua_code = $analytics[ 'propertyID' ];
+                    if ( ! empty( $analytics ) && ! empty( $analytics[ 'measurementID' ] ) ) {
+                        $ua_code = $analytics[ 'measurementID' ];
                     }
 
                     break;
@@ -259,11 +232,11 @@
         }
 
         /**
-         * Validate the UA code.
+         * Validate the G-Code. Universal Analytics (UA-) codes are no longer accepted, since Google shut down UA.
          *
-         * @param string $ua_code UA code to check validity.
+         * @param string $ua_code G-Code to check validity.
          *
-         * @return string Cleaned UA code if valid, otherwise an empty string.
+         * @return string Cleaned G-Code if valid, otherwise an empty string.
          */
         public static function validate_ua_code( $ua_code = '' ) {
             $ua_code = (string) $ua_code;
@@ -276,7 +249,7 @@
             // Replace all type of dashes (n-dash, m-dash, minus) with normal dashes.
             $ua_code = str_replace( array( '–', '—', '−' ), '-', $ua_code );
 
-            if ( preg_match( "/^UA-\d{4,}-\d+$/", $ua_code ) || self::is_ga4_code( $ua_code ) ) {
+            if ( self::is_ga4_code( $ua_code ) ) {
                 return $ua_code;
             }
 
@@ -302,49 +275,6 @@
         }
 
         /**
-         * Get checklist with the current status of the settings.
-         *
-         * @param null|array $options All settings options. If null, options used from the function self::get_options() (Default: null)
-         * @param bool       $echo    If false, the code will be returned. Otherwise it will be echoed. (Default: true)
-         *
-         * @return string HTML-Code
-         */
-        public static function render_checklist( $options = null, $echo = true ) {
-            if ( is_null( $options ) ) {
-                $options = self::get_options();
-            }
-
-            $checklist = GAOO_Utils::check_todos( $options, true );
-
-            $_check   = '';
-            $checked  = 0;
-            $dontknow = 0;
-
-            foreach ( $checklist as $check ):
-                if ( ! empty( $check[ 'url' ] ) ) {
-                    $check[ 'label' ] = '<a title="' . esc_html__( "Got to page", 'opt-out-for-google-analytics' ) . '" target="_blank" href="' . esc_url( $check[ 'url' ] ) . '">' . $check[ 'label' ] . '<span class="dashicons dashicons-external"></span></a>';
-                }
-
-                $_check .= sprintf( '<li class="%s">%s</li>', ( false !== $check[ 'checked' ] ? ( is_null( $check[ 'checked' ] ) ? 'dontknow' : 'check' ) : '' ), $check[ 'label' ] );
-
-                if ( ! empty( $check[ 'checked' ] ) ) {
-                    $checked++;
-                }
-                elseif ( is_null( $check[ 'checked' ] ) ) {
-                    $dontknow++;
-                }
-            endforeach;
-
-            $_check = '<div id="gaoo-checklist" class="' . ( ( count( $checklist ) - $dontknow ) == $checked ? ( $dontknow == 0 ? 'done' : 'dontknow' ) : 'todo' ) . '"><h2>' . esc_html__( 'Current status of this website', 'opt-out-for-google-analytics' ) . '</h2><ul class="gaoo-check">' . $_check . '</ul></div>';
-
-            if ( ! $echo ) {
-                return $_check;
-            }
-
-            echo $_check;
-        }
-
-        /**
          * Checking the status of the current website.
          *
          * @param array $data       Data with the plugin options.
@@ -360,14 +290,15 @@
 
             if ( ! empty( $data[ 'privacy_page_id' ] ) && ( $page = get_post( $data[ 'privacy_page_id' ] ) ) ) {
                 $page_content        = sanitize_post_field( 'post_content', $page->post_content, $page->ID, 'raw' );
-                $shortcode_available = ( ! empty( $page_content ) && false !== strpos( $page_content, GAOO_SHORTCODE ) );
+                $shortcode_available = ( ! empty( $page_content ) && ( false !== strpos( $page_content, GAOO_SHORTCODE ) || has_block( 'gaoo/block', $page_content ) ) );
                 $shortcode_url       = admin_url( 'post.php?action=edit&post=' . $data[ 'privacy_page_id' ] );
 
                 $privacy_page_accessibile = ( sanitize_post_field( 'post_status', $page->post_status, $page->ID, 'raw' ) == 'publish' && empty( $page->post_password ) );
 
-                // ACF support
+                // ACF and Secure Custom Fields (fork of ACF, same class and functions) support
                 if ( class_exists( 'ACF' ) && ! $shortcode_available ) {
                     $fields = get_fields( $page->ID );
+                    $fields = is_array( $fields ) ? $fields : array();
 
                     foreach ( $fields as $name => $value ) {
                         if ( ! empty( $value ) && is_string( $value ) && false !== strpos( $value, GAOO_SHORTCODE ) ) {
@@ -378,67 +309,30 @@
                 }
             }
 
-            // Check if ip anonymization is enabled and set the urls
-            if ( $data[ 'ga_plugin' ] == 'monsterinsights' && function_exists( 'monsterinsights_get_option' ) ) {
-                $anonymip_enabled = monsterinsights_get_option( 'anonymize_ips', false );
-                $anonymip_url     = admin_url( 'admin.php?page=monsterinsights_settings#/engagement' );
+            // Set the url to the settings page of the GA plugin. IP anonymization is no longer checked, because GA4 does not log or store IP addresses.
+            switch ( $data[ 'ga_plugin' ] ) {
+                case 'monsterinsights':
+                    $uacode_url = admin_url( 'admin.php?page=monsterinsights_settings' );
+                    break;
 
-                $uacode_url = admin_url( 'admin.php?page=monsterinsights_settings' );
+                case 'gadash':
+                    $uacode_url = admin_url( 'admin.php?page=exactmetrics_settings#/' );
+                    break;
 
-            }
-            elseif ( $data[ 'ga_plugin' ] == 'gadash' ) {
+                case 'analytify':
+                    $uacode_url = admin_url( 'admin.php?page=analytify-settings#wp-analytify-authentication' );
+                    break;
 
-                // backward compatibility to older versions
-                if ( function_exists( 'GADWP' ) ) {
-                    $gadwp            = GADWP();
-                    $anonymip_enabled = $gadwp->config->options[ 'ga_anonymize_ip' ];
+                case 'gaga':
+                    $uacode_url = admin_url( 'options-general.php?page=ga-google-analytics#gap-panel-settings' );
+                    break;
 
-                    // backwards compatibility for older versions. New version renamed options.
-                    if ( is_null( $anonymip_enabled ) ) {
-                        $anonymip_enabled = $gadwp->config->options[ 'ga_dash_anonim' ];
-                    }
+                case 'sitekit':
+                    $uacode_url = admin_url( 'admin.php?page=googlesitekit-settings' );
+                    break;
 
-                    $anonymip_url = admin_url( 'admin.php?page=gadwp_tracking_settings#top#gadwp-advanced' );
-                    $uacode_url   = admin_url( 'admin.php?page=gadwp_tracking_settings' );
-                }
-                elseif ( function_exists( 'exactmetrics_get_option' ) ) {
-                    $anonymip_enabled = exactmetrics_get_option( 'anonymize_ips', false );
-                    $uacode_url       = admin_url( 'admin.php?page=exactmetrics_settings#/' );
-                    $anonymip_url     = admin_url( 'admin.php?page=exactmetrics_settings#/engagement' );
-                }
-
-            }
-            elseif ( $data[ 'ga_plugin' ] == 'analytify' && class_exists( 'WP_Analytify' ) ) {
-                $analytify        = WP_Analytify::get_instance();
-                $anonymip_enabled = ( 'on' == $analytify->settings->get_option( 'anonymize_ip', 'wp-analytify-advanced' ) );
-                $anonymip_url     = admin_url( 'admin.php?page=analytify-settings#wp-analytify-advanced' );
-                $uacode_url       = admin_url( 'admin.php?page=analytify-settings#wp-analytify-authentication' );
-            }
-            elseif ( $data[ 'ga_plugin' ] == 'gaga' && ! empty( $GLOBALS[ 'GA_Google_Analytics' ] ) ) {
-                global $GA_Google_Analytics;
-
-                $options          = get_option( 'gap_options', $GA_Google_Analytics->default_options() );
-                $anonymip_enabled = ( ! empty( $options[ 'gap_anonymize' ] ) ) ? $options[ 'gap_anonymize' ] : false;
-                $anonymip_url     = admin_url( 'options-general.php?page=ga-google-analytics#gap-panel-settings' );
-                $uacode_url       = admin_url( 'options-general.php?page=ga-google-analytics#gap-panel-settings' );
-
-            }
-            elseif ( $data[ 'ga_plugin' ] == 'sitekit' && ( $analytics = get_option( 'googlesitekit_analytics_settings' ) ) ) {
-                $anonymip_url     = null;
-                $uacode_url       = admin_url( 'admin.php?page=googlesitekit-settings' );
-                $anonymip_enabled = ! empty( $analytics[ 'anonymizeIP' ] );
-            }
-            else { // manual
-                $anonymip_enabled = null;
-                $anonymip_url = null;
-                $uacode_url = null;
-
-                if ( GAOO_Utils::is_ga4_code( $data[ 'ua_code' ] ) ) {
-                    $anonymip_enabled = true;
-                }
-                elseif ( ! empty( $data[ 'tracking_code' ] ) ) {
-                    $anonymip_enabled = (bool) preg_match_all( '/(anonymizeIp|anonymize_ip).*true/mi', $data[ 'tracking_code' ] );
-                }
+                default: // manual
+                    $uacode_url = null;
             }
 
             $ua_code     = GAOO_Utils::get_code( $data[ 'ga_plugin' ] );
@@ -450,13 +344,11 @@
                 ),
                 array(
                     'label'   => esc_html__( 'Found valid code', 'opt-out-for-google-analytics' ) . $ua_code_txt,
+                    // Label without the code and the code itself, for the dashboard widget.
+                    'text'    => esc_html__( 'Found valid code', 'opt-out-for-google-analytics' ),
+                    'value'   => $ua_code,
                     'checked' => ( ! empty( $ua_code ) ),
                     'url'     => $uacode_url,
-                ),
-                array(
-                    'label'   => esc_html__( 'IP anonymization is enabled', 'opt-out-for-google-analytics' ),
-                    'checked' => boolval( $anonymip_enabled ),
-                    'url'     => $anonymip_url,
                 ),
                 array(
                     'label'   => esc_html__( 'Found shortcode on page', 'opt-out-for-google-analytics' ),
@@ -573,10 +465,11 @@
                 return;
             }
 
-            $has_todos = (int) ( $todos[ 'sum' ] - $todos[ 'dontknow' ] ) == $todos[ 'check' ];
+            $has_todos = ( (int) ( $todos[ 'sum' ] - $todos[ 'dontknow' ] ) != $todos[ 'check' ] );
 
             self::delete_todo_cache();
-            set_transient( $transient_name, $has_todos, self::get_status_check_intervall( true ) * DAY_IN_SECONDS );
+            // Store as integer, because a stored false can't be distinguished from a missing transient.
+            set_transient( $transient_name, (int) $has_todos, self::get_status_check_intervall( true ) * DAY_IN_SECONDS );
 
             return boolval( $has_todos );
         }

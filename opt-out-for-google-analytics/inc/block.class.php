@@ -35,7 +35,7 @@
          * Register the block, defined in block/block.json.
          */
         public function register() {
-            wp_register_script( self::HANDLE, GAOO_PLUGIN_URL . '/assets/optout-block.js', array(
+            wp_register_script( self::HANDLE, GAOO_PLUGIN_URL . '/assets/optout-block' . GAOO_Utils::min_suffix() . '.js', array(
                 'wp-blocks',
                 'wp-element',
                 'wp-block-editor',

@@ -7,9 +7,11 @@ class GAOO_Admin
 {
 
     private $messages;
-    private $csstidy;
     private $plugin;
-    private $promotion;
+    /**
+     * @var bool $tinymce_button True, if the TinyMCE button is shown on the current page.
+     */
+    private $tinymce_button = false;
 
     /**
      * GAOO_Admin constructor.
@@ -64,14 +66,14 @@ class GAOO_Admin
 
         $this->plugin = GAOO_PLUGIN_NAME . DIRECTORY_SEPARATOR . 'ga-opt-out.php';
         $this->messages = GAOO_Messages::getInstance();
-        $this->csstidy = new csstidy();
-        // Clear the promotion cache after an update, so the notice will be shown again. Works for every update method (Dashboard, FTP, WP-CLI).
-        if (get_option(GAOO_PREFIX . 'version') !== GAOO_VERSION) {
+        // Migrate the settings and clear the promotion cache after an update, so the notice will be shown again. Works for every update method (Dashboard, FTP, WP-CLI).
+        $old_version = get_option(GAOO_PREFIX . 'version');
+
+        if ($old_version !== GAOO_VERSION) {
+            GAOO_Utils::migrate($old_version);
             GAOO_Promo::clear_cache();
             update_option(GAOO_PREFIX . 'version', GAOO_VERSION);
         }
-
-        $this->promotion = GAOO_Promo::get_links();
 
         $this->add_tinymce_button();
     }
@@ -89,6 +91,9 @@ class GAOO_Admin
         if (!current_user_can('edit_pages') || empty($post_id) || $post_id != get_option('wp_page_for_privacy_policy', 0) || get_user_option('rich_editing') != 'true') {
             return;
         }
+
+        // The icon of the button is defined in admin.css
+        $this->tinymce_button = true;
 
         add_filter("mce_external_plugins", array(
             $this,
@@ -159,16 +164,20 @@ class GAOO_Admin
         foreach ($checklist as $check) {
             $status = $check['checked'] === true ? 'check' : ($check['checked'] === false ? 'todo' : 'dontknow');
 
-            echo '<li class="gaoo-widget-check-' . esc_attr($status) . '">';
-            echo '<span class="dashicons dashicons-' . esc_attr($icons[$status]) . '" aria-hidden="true"></span>';
-            echo '<span class="gaoo-widget-check-label">' . (isset($check['text']) ? $check['text'] : $check['label']) . '</span>';
+            $row = '<span class="gaoo-widget-check-icon dashicons dashicons-' . esc_attr($icons[$status]) . '" aria-hidden="true"></span>';
+            $row .= '<span class="gaoo-widget-check-label">' . (isset($check['text']) ? $check['text'] : $check['label']) . '</span>';
 
             if (!empty($check['value'])) {
-                echo '<code>' . esc_html($check['value']) . '</code>';
+                $row .= '<code>' . esc_html($check['value']) . '</code>';
             }
 
+            echo '<li class="gaoo-widget-check-' . esc_attr($status) . '">';
+
+            // If there is a page to fix the check, the whole row is the link.
             if (!empty($check['url'])) {
-                echo '<a class="gaoo-widget-check-link" href="' . esc_url($check['url']) . '" target="_blank" title="' . esc_attr__('Got to page', 'opt-out-for-google-analytics') . '"><span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__('Got to page', 'opt-out-for-google-analytics') . '</span></a>';
+                echo '<a class="gaoo-widget-check-row" href="' . esc_url($check['url']) . '" target="_blank" title="' . esc_attr__('Got to page', 'opt-out-for-google-analytics') . '">' . $row . '<span class="gaoo-widget-check-arrow dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span><span class="screen-reader-text">(' . esc_html__('Got to page', 'opt-out-for-google-analytics') . ')</span></a>';
+            } else {
+                echo '<div class="gaoo-widget-check-row">' . $row . '</div>';
             }
 
             echo '</li>';
@@ -241,7 +250,7 @@ class GAOO_Admin
      */
     public function add_tinymce_plugin($plugins)
     {
-        $plugins['gaoptout'] = add_query_arg('ver', GAOO_VERSION, GAOO_PLUGIN_URL . '/assets/tinymce.js');
+        $plugins['gaoptout'] = add_query_arg('ver', GAOO_VERSION, GAOO_PLUGIN_URL . '/assets/tinymce' . GAOO_Utils::min_suffix() . '.js');
 
         return $plugins;
     }
@@ -303,8 +312,11 @@ class GAOO_Admin
         if ($file == $this->plugin) {
             $links[] = "<a href='https://wordpress.org/support/plugin/opt-out-for-google-analytics/reviews/?rate=5#new-post' target='_blank'>" . esc_html__('Rate:', 'opt-out-for-google-analytics') . "<i class='gaoo-rate-stars'>" . "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-star'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" . "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-star'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" . "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-star'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" . "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-star'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" . "<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-star'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" . "</i></a>";
 
-            if (!empty($this->promotion)) {
-                foreach ($this->promotion as $item) {
+            // Loaded only here, so the promotion data is not requested on every page load.
+            $promotion = GAOO_Promo::get_links();
+
+            if (!empty($promotion)) {
+                foreach ($promotion as $item) {
                     $links[] = '<strong><a target="_blank" href="' . esc_url($item['link']) . '">' . esc_html($item['link_text']) . '</a></strong>';
                 }
             }
@@ -314,14 +326,24 @@ class GAOO_Admin
     }
 
     /**
-     * Enqueue scripts and styles for the admin pages.
+     * Enqueue scripts and styles for the admin pages. Only on the pages, where they are needed.
+     *
+     * @param string $hook_suffix The current admin page.
      */
-    public function enqueue_scripts()
+    public function enqueue_scripts($hook_suffix = '')
     {
-        wp_enqueue_style('gaoo-admin-styles', GAOO_PLUGIN_URL . '/assets/admin.css', array(), GAOO_VERSION);
+        $min = GAOO_Utils::min_suffix();
+        $is_settings_page = ('settings_page_gaoo' === $hook_suffix);
+
+        // Dashboard widget, settings page, rating stars in the plugin list and the TinyMCE button.
+        if (!$is_settings_page && !$this->tinymce_button && !in_array($hook_suffix, array('index.php', 'plugins.php'), true)) {
+            return;
+        }
+
+        wp_enqueue_style('gaoo-admin-styles', GAOO_PLUGIN_URL . '/assets/admin' . $min . '.css', array(), GAOO_VERSION);
 
         // Run only if functionallity on the right pages
-        if (isset($_GET['page']) && $_GET['page'] === 'gaoo') {
+        if ($is_settings_page) {
             // The settings page is framed in the color of the admin menu, like the connectors page. The color depends on the admin color scheme of the user.
             global $_wp_admin_css_colors;
 
@@ -332,7 +354,7 @@ class GAOO_Admin
                 wp_add_inline_style('gaoo-admin-styles', 'body.settings_page_gaoo { --gaoo-frame: ' . $frame_color . '; }');
             }
 
-            wp_enqueue_script('gaoo-admin-script', GAOO_PLUGIN_URL . '/assets/admin.js', array('jquery'), GAOO_VERSION, true);
+            wp_enqueue_script('gaoo-admin-script', GAOO_PLUGIN_URL . '/assets/admin' . $min . '.js', array('jquery'), GAOO_VERSION, true);
 
             wp_localize_script('gaoo-admin-script', 'gaoo', array(
                 'edit_link' => esc_url(admin_url('post.php?action=edit&post=%d')),
@@ -433,7 +455,6 @@ class GAOO_Admin
 
         $wp_privacy_page_id = get_option('wp_page_for_privacy_policy', 0);
         $wp_admin_mail = get_option('admin_email', null);
-        $promotion = $this->promotion;
 
         include_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'settings.php';
     }
@@ -482,6 +503,7 @@ class GAOO_Admin
             'force_reload' => FILTER_SANITIZE_NUMBER_INT,
             'wp_privacy_page' => FILTER_SANITIZE_NUMBER_INT,
             'custom_css' => FILTER_UNSAFE_RAW,
+            'custom_css_status' => FILTER_UNSAFE_RAW,
             'tracking_code' => FILTER_UNSAFE_RAW,
             'status_intervall' => FILTER_UNSAFE_RAW,
             'status_mails' => FILTER_UNSAFE_RAW,
@@ -502,7 +524,7 @@ class GAOO_Admin
         }
 
         // Validate checkboxes
-        $checkboxes = array('status', 'uninstall_keep_data', 'disable_dashboard');
+        $checkboxes = array('status', 'uninstall_keep_data', 'disable_dashboard', 'custom_css_status');
 
         foreach ($checkboxes as $checkbox) {
             if (!isset($data[$checkbox])) {
@@ -546,14 +568,25 @@ class GAOO_Admin
             $this->messages->addWarning(esc_html__('The tracking code was not changed, because you are not allowed to insert unfiltered HTML.', 'opt-out-for-google-analytics'));
         }
 
+        // Only users which are allowed to edit CSS (e.g. not the site admins in a multisite) may change the custom CSS, like the "Additional CSS" of WordPress.
+        if (!current_user_can('edit_css')) {
+            $skip_save[] = 'custom_css';
+
+            if (trim(stripslashes($data['custom_css'])) !== trim(stripslashes(get_option(GAOO_PREFIX . 'custom_css', '')))) {
+                $this->messages->addWarning(esc_html__('The custom CSS was not changed, because you are not allowed to edit CSS.', 'opt-out-for-google-analytics'));
+            }
+        }
+
         // Check and validate the custom css code
-        if (!empty($data['custom_css'])) {
-            if (!$this->csstidy->parse(stripslashes($data['custom_css']))) {
+        if (!empty($data['custom_css']) && !in_array('custom_css', $skip_save, true)) {
+            $csstidy = GAOO_Utils::get_csstidy();
+
+            if (!$csstidy->parse(stripslashes($data['custom_css']))) {
                 $skip_save[] = 'custom_css';
                 $this->messages->addWarning(esc_html__("Your custom css code was not stored, because it is not valid! We stoll hold the old version of it, please check below the code and save again.", 'opt-out-for-google-analytics'));
             } else {
                 // Strip HTML tags, so the code can't break out of the style element.
-                $data['custom_css'] = wp_slash(wp_strip_all_tags($this->csstidy->print->plain()));
+                $data['custom_css'] = wp_slash(wp_strip_all_tags($csstidy->print->plain()));
             }
         }
 

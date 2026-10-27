@@ -111,6 +111,7 @@
                 'force_reload'        => 0,
                 'wp_privacy_page'     => 0,
                 'custom_css'          => '',
+                'custom_css_status'   => 'off',
                 'tracking_code'       => '',
                 'status_intervall'    => 'weekly',
                 'status_mails'        => '',
@@ -290,10 +291,21 @@
 
             if ( ! empty( $data[ 'privacy_page_id' ] ) && ( $page = get_post( $data[ 'privacy_page_id' ] ) ) ) {
                 $page_content        = sanitize_post_field( 'post_content', $page->post_content, $page->ID, 'raw' );
-                $shortcode_available = ( ! empty( $page_content ) && ( false !== strpos( $page_content, GAOO_SHORTCODE ) || has_block( 'gaoo/block', $page_content ) ) );
+                $shortcode_available = ( ! empty( $page_content ) && ( false !== strpos( $page_content, GAOO_SHORTCODE ) || has_block( 'gaoo/block', $page_content ) || has_block( 'gaoo/optout', $page_content ) ) );
                 $shortcode_url       = admin_url( 'post.php?action=edit&post=' . $data[ 'privacy_page_id' ] );
 
                 $privacy_page_accessibile = ( sanitize_post_field( 'post_status', $page->post_status, $page->ID, 'raw' ) == 'publish' && empty( $page->post_password ) );
+
+                // Divi: the module is stored as its own shortcode in the content.
+                if ( ! $shortcode_available && ! empty( $page_content ) && preg_match( '/\[gaoo_optout[\s\]\/]/', $page_content ) ) {
+                    $shortcode_available = true;
+                }
+
+                // Elementor: the content is stored in its own meta field, if the page is built with Elementor.
+                if ( ! $shortcode_available && 'builder' === get_post_meta( $page->ID, '_elementor_edit_mode', true ) ) {
+                    $elementor_data      = (string) get_post_meta( $page->ID, '_elementor_data', true );
+                    $shortcode_available = ( false !== strpos( $elementor_data, GAOO_SHORTCODE ) || false !== strpos( $elementor_data, '"widgetType":"gaoo-optout"' ) );
+                }
 
                 // ACF and Secure Custom Fields (fork of ACF, same class and functions) support
                 if ( class_exists( 'ACF' ) && ! $shortcode_available ) {
@@ -394,6 +406,51 @@
                 'check'    => $check,
                 'todo'     => $todo,
             );
+        }
+
+        /**
+         * Suffix of the minified assets. With SCRIPT_DEBUG the readable files are loaded, like WordPress does.
+         *
+         * @return string ".min" or empty string.
+         */
+        public static function min_suffix() {
+            return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        }
+
+        /**
+         * Returns a new CSSTidy instance. The library is only loaded when it is needed, e.g. not on pages without custom CSS.
+         *
+         * @param string|null $template Template of CSSTidy, e.g. "highest_compression". (Default: null)
+         *
+         * @return csstidy
+         */
+        public static function get_csstidy( $template = null ) {
+            // Another plugin may have already loaded its own copy of CSSTidy.
+            if ( ! class_exists( 'csstidy' ) ) {
+                require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'csstidy' . DIRECTORY_SEPARATOR . 'class.csstidy.php';
+            }
+
+            $csstidy = new csstidy();
+
+            if ( ! empty( $template ) ) {
+                $csstidy->load_template( $template );
+            }
+
+            return $csstidy;
+        }
+
+        /**
+         * Migrate the settings after an update of the plugin. Runs once per update and site.
+         *
+         * @param string|false $old_version Version before the update, false on a new installation or an update from a version before 2.5.
+         */
+        public static function migrate( $old_version ) {
+            // 2.6: New switch for the custom CSS, disabled by default. Enable it, if custom CSS was already entered before the update.
+            if ( false === get_option( GAOO_PREFIX . 'custom_css_status', false ) ) {
+                $custom_css = (string) get_option( GAOO_PREFIX . 'custom_css', '' );
+
+                update_option( GAOO_PREFIX . 'custom_css_status', preg_match( '/\S/u', $custom_css ) ? 'on' : 'off' );
+            }
         }
 
         /**

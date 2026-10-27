@@ -8,9 +8,16 @@
         private $csstidy;
 
         /**
+         * @var GAOO_Public|null $instance Instance of this class, used by the Elementor widget.
+         */
+        private static $instance = null;
+
+        /**
          * GAOO_Public constructor.
          */
         public function __construct() {
+            self::$instance = $this;
+
             add_action( 'wp_head', array(
                 $this,
                 'head_script'
@@ -30,17 +37,35 @@
                 add_filter( 'widget_text', 'do_shortcode' );
             }
 
-            $this->csstidy = new csstidy();
-            $this->csstidy->load_template( 'highest_compression' );
+        }
+
+        /**
+         * Returns the CSSTidy instance, created on the first use.
+         *
+         * @return csstidy
+         */
+        private function get_csstidy() {
+            if ( empty( $this->csstidy ) ) {
+                $this->csstidy = GAOO_Utils::get_csstidy( 'highest_compression' );
+            }
+
+            return $this->csstidy;
+        }
+
+        /**
+         * Returns the instance of this class.
+         *
+         * @return GAOO_Public|null Instance, or null if not created yet.
+         */
+        public static function get_instance() {
+            return self::$instance;
         }
 
         /**
          * Enqueue scripts and styles for the public pages.
          */
         public function enqueue_scripts() {
-            $min = SCRIPT_DEBUG ? '' : '.min';
-
-            wp_register_script( 'gaoo-public', GAOO_PLUGIN_URL . '/assets/public' . $min . '.js', array(), GAOO_VERSION, true );
+            wp_register_script( 'gaoo-public', GAOO_PLUGIN_URL . '/assets/public' . GAOO_Utils::min_suffix() . '.js', array(), GAOO_VERSION, true );
         }
 
         /**
@@ -100,9 +125,9 @@
             $link_text = empty( $atts[ 'link_' . $current_status ] ) ? $json_data[ 'link_' . $current_status ] : $atts[ 'link_' . $current_status ];
             $html      = '<a href="#" role="button" id="gaoo-link" class="gaoo-link gaoo-link-' . esc_attr( $current_status ) . '"' . $data_attributes . '>' . esc_html( $link_text ) . '</a>';
 
-            if ( ! empty( $form_data[ 'custom_css' ] ) && $this->csstidy->parse( $form_data[ 'custom_css' ] ) ) {
+            if ( 'on' === $form_data[ 'custom_css_status' ] && ! empty( $form_data[ 'custom_css' ] ) && $this->get_csstidy()->parse( $form_data[ 'custom_css' ] ) ) {
                 // Strip HTML tags, so the code can't break out of the style element.
-                $html .= '<style type="text/css">' . wp_strip_all_tags( $this->csstidy->print->plain() ) . '</style>';
+                $html .= '<style type="text/css">' . wp_strip_all_tags( $this->get_csstidy()->print->plain() ) . '</style>';
             }
 
             do_action( 'gaoo_after_shortcode', $ua_code, $current_status );

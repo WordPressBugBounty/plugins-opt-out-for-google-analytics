@@ -9,6 +9,7 @@
 ?>
 
 <div class="wrap gaoo-settings" id="gaoo">
+<div class="gaoo-settings-scroll">
 
     <div class="gaoo-header">
         <div>
@@ -77,7 +78,11 @@
                         </div>
 
                         <div class="gaoo-field">
-                            <textarea id="ga-plugin-tracking-code" class="large-text code" rows="6" name="gaoo[tracking_code]" placeholder="<?php esc_attr_e( 'Enter here your tracking code for Google Analytics to insert it on your whole website. Leave empty if you do not want it.', 'opt-out-for-google-analytics' ); ?>"><?php echo esc_textarea( $tracking_code ); ?></textarea>
+                            <?php if ( ! current_user_can( 'unfiltered_html' ) ): ?>
+                                <div class="notice notice-warning inline gaoo-readonly-notice"><p><?php esc_html_e( 'You are not allowed to change the tracking code, because your user role may not insert unfiltered HTML.', 'opt-out-for-google-analytics' ); ?></p></div>
+                            <?php endif; ?>
+
+                            <textarea id="ga-plugin-tracking-code" class="large-text code" rows="6" name="gaoo[tracking_code]" <?php echo current_user_can( 'unfiltered_html' ) ? '' : 'readonly'; ?> placeholder="<?php esc_attr_e( 'Enter here your tracking code for Google Analytics to insert it on your whole website. Leave empty if you do not want it.', 'opt-out-for-google-analytics' ); ?>"><?php echo esc_textarea( $tracking_code ); ?></textarea>
                         </div>
                     </div>
 
@@ -199,8 +204,19 @@
                 <h2><?php esc_html_e( "Add custom css", 'opt-out-for-google-analytics' ); ?></h2>
                 <p class="description"><?php esc_html_e( "This CSS is only inserted where the shortcode is used.", 'opt-out-for-google-analytics' ); ?></p>
 
+                <label class="gaoo-toggle" for="gaoo-custom-css-status">
+                    <input type="hidden" name="gaoo[custom_css_status]" value="off" />
+                    <input type="checkbox" id="gaoo-custom-css-status" name="gaoo[custom_css_status]" value="on" <?php checked( 'on', $custom_css_status ); ?> />
+                    <span class="gaoo-toggle-text"><strong><?php esc_html_e( 'Use custom CSS', 'opt-out-for-google-analytics' ); ?></strong>
+                        <span class="description"><?php esc_html_e( 'Switch off to test the website without the custom CSS. The code is kept.', 'opt-out-for-google-analytics' ); ?></span></span>
+                </label>
+
+                <?php if ( ! current_user_can( 'edit_css' ) ): ?>
+                    <div class="notice notice-warning inline gaoo-readonly-notice"><p><?php esc_html_e( 'You are not allowed to change the custom CSS, because your user role may not edit CSS.', 'opt-out-for-google-analytics' ); ?></p></div>
+                <?php endif; ?>
+
                 <div class="gaoo-css">
-                    <textarea id="gaoo-custom-css" name="gaoo[custom_css]" class="large-text code" rows="10"><?php echo esc_textarea( $custom_css ); ?></textarea>
+                    <textarea id="gaoo-custom-css" name="gaoo[custom_css]" class="large-text code" rows="10" <?php echo current_user_can( 'edit_css' ) ? '' : 'readonly'; ?>><?php echo esc_textarea( $custom_css ); ?></textarea>
 
                     <div class="gaoo-css-classes">
                         <strong><?php esc_html_e( 'Overview CSS classes', 'opt-out-for-google-analytics' ); ?></strong>
@@ -232,4 +248,10 @@
             </div>
         </form>
     </div>
+
+    <div class="gaoo-footer">
+        <span><?php printf( esc_html__( 'Made for you by %s', 'opt-out-for-google-analytics' ), '<a href="' . esc_url( 'https://schweizer.solutions/madeby?utm_content=wp-ga-opt-out-footer' ) . '" target="_blank" rel="noopener">Schweizer Solutions</a>' ); ?></span>
+        <span><?php printf( esc_html__( 'Version %s', 'opt-out-for-google-analytics' ), esc_html( GAOO_VERSION ) ); ?></span>
+    </div>
+</div>
 </div>

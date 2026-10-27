@@ -7,8 +7,14 @@ if (typeof gaoo_data !== 'undefined' && document.cookie.indexOf(gaoo_data.disabl
 document.addEventListener('click', function (event) {
   var link = event.target.closest ? event.target.closest('.gaoo-link') : null;
 
-  if (link && typeof gaoo_data !== 'undefined') {
-    event.preventDefault();
+  if (!link || typeof gaoo_data === 'undefined') {
+    return;
+  }
+
+  event.preventDefault();
+
+  // In the Elementor editor, a click selects the widget and must not change the opt-out.
+  if (!document.body.classList.contains('elementor-editor-active')) {
     gaoo_handle_optout(link);
   }
 });

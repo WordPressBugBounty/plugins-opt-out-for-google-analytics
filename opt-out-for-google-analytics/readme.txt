@@ -4,7 +4,7 @@ Tags: google analytics, opt-out, dsgvo, gdpr, analytics
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 2.5
+Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.schweizersolutions.com/?utm_source=wordpressorg&utm_medium=plugin&utm_campaign=donate
@@ -31,6 +31,8 @@ Until now, this was only possible with a browser add-on or with complicated Java
 * Local storage fallback: If a visitor deletes their cookies, the opt-out cookie is restored, as long as the browser's local storage has not been cleared as well.
 * Compatible with WordPress Multisite
 * Gutenberg block with a preview, a warning if the link is not displayed, and settings for color, typography, spacing and alignment
+* Elementor widget with individual link and popup texts, and settings for alignment, typography and colors
+* Divi module for Divi 4 and Divi 5 with individual link and popup texts, live preview in the Visual Builder and the Divi design settings. Existing modules are converted automatically to Divi 5.
 * Works with page caching: the link always shows the current status of the visitor.
 * Compatible with [Advanced Custom Fields](https://wordpress.org/plugins/advanced-custom-fields/), [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/), [WPML](https://wpml.org/?utm_source=wordpressorg&utm_medium=opt-out-for-google-analytics), [Polylang](https://wordpress.org/plugins/polylang/) and [Loco Translate](https://wordpress.org/plugins/loco-translate/)
 * Also works on smartphones, provided the browser supports cookies
@@ -48,8 +50,8 @@ You can choose how often the check runs: daily, weekly or monthly.
 The following settings are checked:
 
 * Opt-out function is enabled
-* Opt-out shortcode or block is present on the page
-* The page with the shortcode or block is publicly available (published and not password protected)
+* Opt-out shortcode, block, Elementor widget or Divi module is present on the page
+* The page with the opt-out link is publicly available (published and not password protected)
 * A valid GA4 measurement ID was found (only the format is checked)
 * The cron job for the status check is active
 
@@ -147,11 +149,11 @@ After deactivating the plugin, you can remove it completely by clicking "Delete"
 
 = Where can I use the shortcode? =
 
-You can use the shortcode `[ga_optout]` in posts, pages and widgets (text widget). In the block editor, you can also use the block "Opt-Out for Google Analytics".
+You can use the shortcode `[ga_optout]` in posts, pages and widgets (text widget). In the block editor, you can also use the block "Opt-Out for Google Analytics", and in Elementor and Divi the widget or module with the same name.
 
 = Can I use different link and popup texts on one page? =
 
-Yes. In the Gutenberg block, you can enter individual link and popup texts in the block settings. If you use the shortcode, add the texts as attributes:
+Yes. In the Gutenberg block, the Elementor widget and the Divi module, you can enter individual link and popup texts in the settings. If you use the shortcode, add the texts as attributes:
 
 `[ga_optout link_deactivate="Disallow tracking" link_activate="Allow tracking" popup_deactivate="Tracking is disabled." popup_activate="Tracking is enabled."]`
 
@@ -299,6 +301,14 @@ For Google Tag Manager, an additional cookie named "ga-opt-out" is set.
 6. Dashboard widget with the status check
 
 == Changelog ==
+
+= 2.6 =
+* Security: Only users with the "edit_css" capability can change the custom CSS, like the "Additional CSS" of WordPress (relevant for multisite).
+* Added: Switch to enable or disable the custom CSS without deleting it, e.g. to test the website without it. It is disabled by default, and enabled automatically on update if custom CSS was already entered.
+* Updated: The tracking code and the custom CSS are read-only, with a notice, if the user is not allowed to change them.
+* Added: Elementor widget "Opt-Out for Google Analytics" with individual link and popup texts, and settings for alignment, typography and colors.
+* Added: The status check also finds the Elementor widget and the shortcode on pages built with Elementor. Same for Divi module (Divi 4 and Divi 5).
+* Added: Divi module "Opt-Out for Google Analytics" for Divi 4 and Divi 5, with individual link and popup texts, live preview in the Visual Builder and the Divi design settings.
 
 = 2.5 =
 * Security: Only users with the "unfiltered_html" capability can change the tracking code (relevant for multisite).

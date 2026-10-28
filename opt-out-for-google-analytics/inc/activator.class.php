@@ -8,26 +8,19 @@ if ( ! class_exists( 'GAOO_Activator' ) ):
 		/**
 		 * Init the activation of this plugin, with multisite support.
 		 *
-		 * @global wpdb $wpdb        WordPress database abstraction object.
 		 *
 		 * @param bool $network_wide Activation is network wide or not
 		 */
 		public static function init( $network_wide ) {
-			global $wpdb;
-
 			self::check_dependencies();
 
 			// Run the activation with multisite support.
 			if ( is_multisite() && $network_wide ) {
-				$old_blog = $wpdb->blogid;
-				$blogids  = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
-
-				foreach ( $blogids as $blog_id ) {
+				foreach ( get_sites( array( 'fields' => 'ids', 'number' => 0 ) ) as $blog_id ) {
 					switch_to_blog( $blog_id );
 					self::activate();
+					restore_current_blog();
 				}
-
-				switch_to_blog( $old_blog );
 
 				return;
 			}
@@ -45,34 +38,35 @@ if ( ! class_exists( 'GAOO_Activator' ) ):
 		 * @global string $wp_version Current version of WordPress.
 		 * @global wpdb $wpdb         WordPress database abstraction object.
 		 *
-		 * @param string $phpv        Mandatory PHP version. (Default: 7.0)
-		 * @param string $wpv         Mandatory WordPress version. (Default: 5.8)
+		 * @param string $phpv        Mandatory PHP version. (Default: 7.4)
+		 * @param string $wpv         Mandatory WordPress version. (Default: 6.3)
 		 * @param string $dbv         Mandatory Database version. (Default: 5.6)
 		 */
-		public static function check_dependencies( $phpv = '7.0', $wpv = '5.8', $dbv = '5.6' ) {
+		public static function check_dependencies( $phpv = '7.4', $wpv = '6.3', $dbv = '5.6' ) {
 			global $wp_version, $wpdb;
 
 			// Check the installed PHP version.
 			if ( version_compare( PHP_VERSION, $phpv, '<' ) ) {
-				$text = esc_html__( 'This plugin can not be activated because it requires a PHP version greater than %1$s. Your PHP version can be updated by your hosting company.', 'opt-out-for-google-analytics' );
+				$text = sprintf( /* translators: %1$s: required PHP version */ __( 'This plugin cannot be activated because it requires a PHP version greater than %1$s. Your PHP version can be updated by your hosting company.', 'opt-out-for-google-analytics' ), $phpv );
 				deactivate_plugins( plugin_basename( GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'ga-opt-out.php' ) );
-				wp_die( '<p>' . sprintf( $text, $phpv ) . '</p> <a href="' . admin_url( 'plugins.php' ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
+				wp_die( '<p>' . esc_html( $text ) . '</p> <a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
 			}
 
 			// Check the installed WordPress version.
 			if ( version_compare( $wp_version, $wpv, '<' ) ) {
-				$text = esc_html__( 'This plugin can not be activated because it requires a WordPress version greater than %1$s. Please go to Dashboard &#9656; Updates to gran the latest version of WordPress.', 'opt-out-for-google-analytics' );
+				$text = sprintf( /* translators: %1$s: required WordPress version */ __( 'This plugin cannot be activated because it requires a WordPress version greater than %1$s. Please go to Dashboard &#9656; Updates to get the latest version of WordPress.', 'opt-out-for-google-analytics' ), $wpv );
 				deactivate_plugins( plugin_basename( GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'ga-opt-out.php' ) );
-				wp_die( '<p>' . sprintf( $text, $wpv ) . '</p> <a href="' . admin_url( 'plugins.php' ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
+				wp_die( '<p>' . esc_html( $text ) . '</p> <a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
 			}
 
 			// Check the installed Database version.
-			$mysql_version = $wpdb->get_var( "SELECT @@version;" );
+			// Version of the database server, without the prefix "5.5.5-" of older MariaDB versions.
+			$mysql_version = $wpdb->db_version();
 
 			if ( ! is_null( $mysql_version ) && version_compare( strtok( $mysql_version, '-' ), $dbv, '<' ) ) {
-				$text = esc_html__( 'This plugin can not be activated because it requires a Database version greater than %1$s. Your Database version can be updated by your hosting company.', 'opt-out-for-google-analytics' );
+				$text = sprintf( /* translators: %1$s: required database version */ __( 'This plugin cannot be activated because it requires a Database version greater than %1$s. Your Database version can be updated by your hosting company.', 'opt-out-for-google-analytics' ), $dbv );
 				deactivate_plugins( plugin_basename( GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'ga-opt-out.php' ) );
-				wp_die( '<p>' . sprintf( $text, $dbv ) . '</p> <a href="' . admin_url( 'plugins.php' ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
+				wp_die( '<p>' . esc_html( $text ) . '</p> <a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">' . esc_html__( 'Go back', 'opt-out-for-google-analytics' ) . '</a>' );
 			}
 		}
 

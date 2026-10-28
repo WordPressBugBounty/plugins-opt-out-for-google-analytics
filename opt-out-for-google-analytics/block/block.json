@@ -35,15 +35,42 @@
         },
         "textAlign": {
             "type": "string"
+        },
+        "linkColor": {
+            "type": "string",
+            "default": ""
+        },
+        "linkHoverColor": {
+            "type": "string",
+            "default": ""
+        },
+        "linkBackground": {
+            "type": "string",
+            "default": ""
+        },
+        "linkHoverBackground": {
+            "type": "string",
+            "default": ""
+        },
+        "popupType": {
+            "type": "string",
+            "default": ""
+        },
+        "forceReload": {
+            "type": "string",
+            "default": ""
+        },
+        "noticeColor": {
+            "type": "string",
+            "default": ""
+        },
+        "noticeBackground": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
         "html": false,
-        "color": {
-            "text": true,
-            "background": true,
-            "link": true
-        },
         "typography": {
             "fontSize": true,
             "lineHeight": true

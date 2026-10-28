@@ -39,6 +39,9 @@
             props.elements.style({
                 attrName: 'link',
             }),
+            props.elements.style({
+                attrName: 'notice',
+            }),
             el(Module.CssStyle, {
                 selector: props.orderClass,
                 attr: attrs.css,
@@ -64,15 +67,26 @@
     }
 
     function Edit(props) {
-        var content = preview.isActive
-            ? el('a', {
-                href: '#',
-                className: 'gaoo-link gaoo-link-deactivate',
-                onClick: function (event) {
-                    event.preventDefault();
-                },
-            }, getText(props.attrs, 'linkDeactivate') || preview.linkDeactivate)
-            : el('div', {className: 'gaoo-divi-notice'}, preview.notice);
+        var popupType = getText(props.attrs, 'popupType'),
+            // "default" uses the setting of the plugin.
+            isNotice = popupType && popupType !== 'default' ? popupType === 'notice' : !!preview.popupNotice,
+            noticeText = getText(props.attrs, 'popupDeactivate') || preview.popupDeactivate,
+            content = preview.isActive
+                ? el(React.Fragment, null,
+                    el('a', {
+                        href: '#',
+                        className: 'gaoo-link gaoo-link-deactivate',
+                        onClick: function (event) {
+                            event.preventDefault();
+                        },
+                    }, getText(props.attrs, 'linkDeactivate') || preview.linkDeactivate),
+                    // Preview of the notice, so it can be styled.
+                    isNotice && noticeText ? el('span', {
+                        className: 'gaoo-notice',
+                        style: {display: 'block', whiteSpace: 'pre-line', marginTop: '.5em'},
+                    }, noticeText) : null
+                )
+                : el('div', {className: 'gaoo-divi-notice'}, preview.notice);
 
         return el(Module.ModuleContainer, {
                 attrs: props.attrs,

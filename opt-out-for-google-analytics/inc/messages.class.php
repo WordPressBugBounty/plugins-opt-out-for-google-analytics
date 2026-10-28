@@ -6,6 +6,14 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 
 	class GAOO_Messages extends GAOO_Singleton {
 		private $message_container;
+
+		/**
+		 * Messages of this request by type. The messages are shown on the same page, so no session is needed.
+		 *
+		 * @var array
+		 */
+		private $messages = array();
+
 		private $message_item_container;
 
 		/**
@@ -31,13 +39,13 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 
 			// Add the type to array, if key not exists
 			if ( ! $this->hasType( $type ) ) {
-				$_SESSION[ GAOO_PREFIX ]['messages'][ $type ] = array();
+				$this->messages[ $type ] = array();
 			}
 
 			if ( is_array( $message ) ) {
-				$_SESSION[ GAOO_PREFIX ]['messages'][ $type ] = array_merge( $_SESSION[ GAOO_PREFIX ]['messages'][ $type ], $message );
+				$this->messages[ $type ] = array_merge( $this->messages[ $type ], $message );
 			} else {
-				$_SESSION[ GAOO_PREFIX ]['messages'][ $type ][] = $message;
+				$this->messages[ $type ][] = $message;
 			}
 
 			return true;
@@ -69,10 +77,10 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 		 */
 		private function hasType( $type = null ) {
 			if ( empty( $type ) ) {
-				return ! empty( $_SESSION[ GAOO_PREFIX ]['messages'] );
+				return ! empty( $this->messages );
 			}
 
-			return ! empty( $_SESSION[ GAOO_PREFIX ]['messages'][ $type ] );
+			return ! empty( $this->messages[ $type ] );
 		}
 
 		public function hasSuccess() {
@@ -117,10 +125,10 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 			}
 
 			if ( empty( $type ) ) {
-				return $_SESSION[ GAOO_PREFIX ]['messages'];
+				return $this->messages;
 			}
 
-			return $_SESSION[ GAOO_PREFIX ]['messages'][ $type ];
+			return $this->messages[ $type ];
 		}
 
 		public function getSuccess() {
@@ -152,12 +160,12 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 
 		private function clearType( $type = null ) {
 			if ( empty( $type ) ) {
-				unset( $_SESSION[ GAOO_PREFIX ]['messages'] );
+				unset( $this->messages );
 
 				return true;
 			}
 
-			unset( $_SESSION[ GAOO_PREFIX ]['messages'][ $type ] );
+			unset( $this->messages[ $type ] );
 
 			return true;
 		}
@@ -215,7 +223,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 				return $this->renderType();
 			}
 
-			echo $this->renderType();
+			echo wp_kses_post( $this->renderType() );
 		}
 
 		public function renderSuccess( $echo = false ) {
@@ -223,7 +231,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 				return $this->renderType( 'success' );
 			}
 
-			echo $this->renderType( 'success' );
+			echo wp_kses_post( $this->renderType( 'success' ) );
 		}
 
 
@@ -232,7 +240,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 				return $this->renderType( 'error' );
 			}
 
-			echo $this->renderType( 'error' );
+			echo wp_kses_post( $this->renderType( 'error' ) );
 		}
 
 		public function renderInfo( $echo = false ) {
@@ -240,7 +248,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 				return $this->renderType( 'info' );
 			}
 
-			echo $this->renderType( 'info' );
+			echo wp_kses_post( $this->renderType( 'info' ) );
 		}
 
 		public function renderWarning( $echo = false ) {
@@ -248,7 +256,7 @@ if ( ! class_exists( 'GAOO_Messages' ) ):
 				return $this->renderType( 'warning' );
 			}
 
-			echo $this->renderType( 'warning' );
+			echo wp_kses_post( $this->renderType( 'warning' ) );
 		}
 
 		/**

@@ -114,8 +114,44 @@
                 'label' => esc_html__( 'Popup texts', 'opt-out-for-google-analytics' ),
             ) );
 
-            $this->add_text_control( 'popup_deactivate', esc_html__( 'Popup Text for deactivate', 'opt-out-for-google-analytics' ), $defaults[ 'popup_deactivate' ] );
-            $this->add_text_control( 'popup_activate', esc_html__( 'Popup Text for activate', 'opt-out-for-google-analytics' ), $defaults[ 'popup_activate' ] );
+            $this->add_text_control( 'popup_deactivate', esc_html__( 'Popup Text for deactivate', 'opt-out-for-google-analytics' ), $defaults[ 'popup_deactivate' ], \Elementor\Controls_Manager::TEXTAREA );
+            $this->add_text_control( 'popup_activate', esc_html__( 'Popup Text for activate', 'opt-out-for-google-analytics' ), $defaults[ 'popup_activate' ], \Elementor\Controls_Manager::TEXTAREA );
+
+            $this->end_controls_section();
+
+            // Behavior with three states: the setting of the plugin (default), or a value only for this widget.
+            $yes            = esc_html__( 'Yes', 'opt-out-for-google-analytics' );
+            $no             = esc_html__( 'No', 'opt-out-for-google-analytics' );
+            $browser_popup  = esc_html__( 'Browser popup', 'opt-out-for-google-analytics' );
+            $text_below     = esc_html__( 'Text below the link', 'opt-out-for-google-analytics' );
+            /* translators: %s: value of the settings */
+            $like_settings  = esc_html__( 'Like the settings (%s)', 'opt-out-for-google-analytics' );
+
+            $this->start_controls_section( 'section_behavior', array(
+                'label' => esc_html__( 'Behavior', 'opt-out-for-google-analytics' ),
+            ) );
+
+            $this->add_control( 'popup_type', array(
+                'label'   => esc_html__( 'Show the popup text as', 'opt-out-for-google-analytics' ),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => '',
+                'options' => array(
+                    ''       => sprintf( $like_settings, 'on' === $options[ 'popup_notice' ] ? $text_below : $browser_popup ),
+                    'alert'  => $browser_popup,
+                    'notice' => $text_below,
+                ),
+            ) );
+
+            $this->add_control( 'force_reload', array(
+                'label'   => esc_html__( 'Reload the page after the click', 'opt-out-for-google-analytics' ),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => '',
+                'options' => array(
+                    ''    => sprintf( $like_settings, empty( $options[ 'force_reload' ] ) ? $no : $yes ),
+                    'yes' => $yes,
+                    'no'  => $no,
+                ),
+            ) );
 
             $this->end_controls_section();
 
@@ -165,6 +201,14 @@
                 ),
             ) );
 
+            $this->add_control( 'link_background', array(
+                'label'     => esc_html__( 'Background Color', 'opt-out-for-google-analytics' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => array(
+                    '{{WRAPPER}} .gaoo-link' => 'background-color: {{VALUE}};',
+                ),
+            ) );
+
             $this->end_controls_tab();
 
             $this->start_controls_tab( 'tab_link_hover', array(
@@ -179,9 +223,104 @@
                 ),
             ) );
 
+            $this->add_control( 'link_background_hover', array(
+                'label'     => esc_html__( 'Background Color', 'opt-out-for-google-analytics' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => array(
+                    '{{WRAPPER}} .gaoo-link:hover, {{WRAPPER}} .gaoo-link:focus' => 'background-color: {{VALUE}};',
+                ),
+            ) );
+
             $this->end_controls_tab();
 
             $this->end_controls_tabs();
+
+            $this->add_responsive_control( 'link_padding', array(
+                'label'      => esc_html__( 'Padding', 'opt-out-for-google-analytics' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => array( 'px', 'em', 'rem' ),
+                'separator'  => 'before',
+                'selectors'  => array(
+                    '{{WRAPPER}} .gaoo-link' => 'display: inline-block; padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ),
+            ) );
+
+            $this->add_control( 'link_border_radius', array(
+                'label'      => esc_html__( 'Border Radius', 'opt-out-for-google-analytics' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => array( 'px', '%', 'em' ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .gaoo-link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ),
+            ) );
+
+            $this->end_controls_section();
+
+            // Notice below the link, if the popup text is not shown as a browser popup.
+            $this->start_controls_section( 'section_notice_style', array(
+                'label' => esc_html__( 'Notice', 'opt-out-for-google-analytics' ),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ) );
+
+            $this->add_control( 'notice_hint', array(
+                'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'             => esc_html__( 'The notice is shown below the link after the click, if the popup text is shown as "Text below the link".', 'opt-out-for-google-analytics' ),
+                'content_classes' => 'elementor-descriptor',
+            ) );
+
+            $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+                'name'     => 'notice_typography',
+                'selector' => '{{WRAPPER}} .gaoo-notice',
+            ) );
+
+            $this->add_control( 'notice_color', array(
+                'label'     => esc_html__( 'Text Color', 'opt-out-for-google-analytics' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => array(
+                    '{{WRAPPER}} .gaoo-notice' => 'color: {{VALUE}};',
+                ),
+            ) );
+
+            $this->add_control( 'notice_background', array(
+                'label'     => esc_html__( 'Background Color', 'opt-out-for-google-analytics' ),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'selectors' => array(
+                    '{{WRAPPER}} .gaoo-notice' => 'background-color: {{VALUE}};',
+                ),
+            ) );
+
+            $this->add_responsive_control( 'notice_padding', array(
+                'label'      => esc_html__( 'Padding', 'opt-out-for-google-analytics' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => array( 'px', 'em', 'rem' ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .gaoo-notice' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ),
+            ) );
+
+            $this->add_control( 'notice_border_radius', array(
+                'label'      => esc_html__( 'Border Radius', 'opt-out-for-google-analytics' ),
+                'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => array( 'px', '%', 'em' ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .gaoo-notice' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ),
+            ) );
+
+            $this->add_responsive_control( 'notice_spacing', array(
+                'label'      => esc_html__( 'Spacing', 'opt-out-for-google-analytics' ),
+                'type'       => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => array( 'px', 'em' ),
+                'range'      => array(
+                    'px' => array(
+                        'min' => 0,
+                        'max' => 60,
+                    ),
+                ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .gaoo-notice' => 'margin-top: {{SIZE}}{{UNIT}};',
+                ),
+            ) );
 
             $this->end_controls_section();
         }
@@ -192,11 +331,12 @@
          * @param string $name        Name of the control.
          * @param string $label       Label of the control.
          * @param string $placeholder Text from the settings.
+         * @param string $type        Type of the control, e.g. a textarea for the popup texts. (Default: text)
          */
-        private function add_text_control( $name, $label, $placeholder ) {
+        private function add_text_control( $name, $label, $placeholder, $type = \Elementor\Controls_Manager::TEXT ) {
             $this->add_control( $name, array(
                 'label'       => $label,
-                'type'        => \Elementor\Controls_Manager::TEXT,
+                'type'        => $type,
                 'placeholder' => $placeholder,
                 'description' => esc_html__( 'Leave empty to use the text from the settings.', 'opt-out-for-google-analytics' ),
                 'label_block' => true,
@@ -228,6 +368,8 @@
                 'link_activate'    => isset( $settings[ 'link_activate' ] ) ? $settings[ 'link_activate' ] : '',
                 'popup_deactivate' => isset( $settings[ 'popup_deactivate' ] ) ? $settings[ 'popup_deactivate' ] : '',
                 'popup_activate'   => isset( $settings[ 'popup_activate' ] ) ? $settings[ 'popup_activate' ] : '',
+                'popup_type'       => isset( $settings[ 'popup_type' ] ) ? $settings[ 'popup_type' ] : '',
+                'force_reload'     => isset( $settings[ 'force_reload' ] ) ? $settings[ 'force_reload' ] : '',
             ) );
 
             $is_edit_mode = \Elementor\Plugin::$instance->editor->is_edit_mode();
@@ -242,8 +384,17 @@
             // The Elementor editor tries to scroll to links with a "#" href and fails with an error for "#" itself.
             if ( $is_edit_mode ) {
                 $html = str_replace( 'href="#"', 'href="javascript:void(0)"', $html );
+
+                // Preview of the notice in the editor, so it can be styled.
+                $options   = GAOO_Utils::get_options();
+                $is_notice = empty( $settings[ 'popup_type' ] ) ? 'on' === $options[ 'popup_notice' ] : 'notice' === $settings[ 'popup_type' ];
+                $text      = empty( $settings[ 'popup_deactivate' ] ) ? html_entity_decode( $options[ 'popup_deactivate' ], ENT_QUOTES, 'UTF-8' ) : $settings[ 'popup_deactivate' ];
+
+                if ( $is_notice && '' !== $text ) {
+                    $html .= '<span class="gaoo-notice">' . esc_html( $text ) . '</span>';
+                }
             }
 
-            echo $html;
+            echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the shortcode, contains the custom CSS.
         }
     }

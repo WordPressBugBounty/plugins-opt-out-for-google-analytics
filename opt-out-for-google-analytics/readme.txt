@@ -1,15 +1,15 @@
 === Opt-Out for Google Analytics (DSGVO / GDPR) ===
 Contributors: schweizersolutions
-Tags: google analytics, opt-out, dsgvo, gdpr, analytics
-Requires at least: 5.8
+Tags: google analytics, opt-out, dsgvo, gdpr, ga4
+Requires at least: 6.3
 Tested up to: 7.1
-Requires PHP: 7.0
-Stable tag: 2.6
+Requires PHP: 7.4
+Stable tag: 2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.schweizersolutions.com/?utm_source=wordpressorg&utm_medium=plugin&utm_campaign=donate
 
-Lets your visitors opt out of Google Analytics tracking, as required by the GDPR (DSGVO).
+GDPR opt-out link for Google Analytics 4 as block, Elementor and Divi module, with automatic status check, uptime monitoring API and webhooks.
 
 == Description ==
 
@@ -17,43 +17,83 @@ The General Data Protection Regulation (GDPR, German: DSGVO) requires that websi
 
 Until now, this was only possible with a browser add-on or with complicated JavaScript code on your own website. With this plugin, it is child's play, and visitors can also undo their objection at any time.
 
+And the plugin makes sure that it stays that way: it checks regularly whether the opt-out still works on your website, and notifies you by email, in Slack, Microsoft Teams or Discord, or in your uptime monitoring, if something is wrong.
+
 **Features**
 
+*Opt-out for your visitors*
+
 * **Support for Google Analytics 4 (GA4)**
-* Full integration with the privacy features of WordPress
-* Regular check (daily, weekly or monthly) whether the settings are still compliant with data protection law
-* Compatible with Google Tag Manager
-* **No other plugin needed** to add the Google Analytics code to your website. The plugin can add it for you.
 * Visitors can disable Google Analytics tracking for themselves and enable it again later.
-* The texts of the opt-out and opt-in link can be customized, also per block or shortcode.
-* An optional popup appears after clicking the link. Its texts can also be customized per block or shortcode.
-* The GA4 measurement ID (G-XXXXXXXXXX) can be entered manually or read automatically from a Google Analytics plugin (see compatible plugins).
+* The texts of the opt-out and opt-in link can be customized, also individually per block, widget, module or shortcode.
+* After the click, the popup text is shown as a browser popup or as a notice below the link, optionally with a reload of the page. Also individually per block, widget, module or shortcode.
 * Local storage fallback: If a visitor deletes their cookies, the opt-out cookie is restored, as long as the browser's local storage has not been cleared as well.
-* Compatible with WordPress Multisite
-* Gutenberg block with a preview, a warning if the link is not displayed, and settings for color, typography, spacing and alignment
-* Elementor widget with individual link and popup texts, and settings for alignment, typography and colors
-* Divi module for Divi 4 and Divi 5 with individual link and popup texts, live preview in the Visual Builder and the Divi design settings. Existing modules are converted automatically to Divi 5.
 * Works with page caching: the link always shows the current status of the visitor.
+* Accessible: the link can be used with the keyboard (Enter and space key), and screen readers announce the notice below the link or the new status.
+* Compatible with Google Tag Manager
+* Optional Google Consent Mode: the opt-out also denies the consent "analytics_storage", so it also works if Google Analytics is loaded by the Google Tag Manager.
+* **No other plugin needed** to add the Google Analytics code to your website. The plugin can add it for you.
+* The GA4 measurement ID (G-XXXXXXXXXX) can be entered manually or read automatically from a Google Analytics plugin (see compatible plugins).
+
+*Block, page builders and shortcode*
+
+* Gutenberg block with a preview, a warning if the link is not displayed, link colors (also on hover, e.g. as a button), colors of the notice, typography, spacing and alignment. Shortcode blocks with the opt-out shortcode can be converted into the block.
+* Elementor widget with individual texts, behavior, alignment, typography, colors and background (also on hover), padding, border radius and the style of the notice.
+* Divi module for Divi 4 and Divi 5 with individual texts, behavior, live preview in the Visual Builder, the Divi design settings and the style of the notice. Existing modules are converted automatically to Divi 5.
+* Shortcode `[ga_optout]` with attributes for individual texts and the behavior.
+
+*Status check and monitoring*
+
+* Regular check (daily, weekly or monthly) whether the opt-out still works, and "Check now" at any time.
+* The check also loads the website and checks whether the opt-out script is loaded (and not removed or delayed by an optimization plugin), which measurement ID is used and whether the opt-out link is displayed on the privacy policy page, with every page builder and theme. Also for websites protected with a password (HTTP basic authentication), e.g. staging websites.
+* Email if a check failed, also to several addresses.
+* Webhook for Slack, Microsoft Teams, Discord, Google Chat, n8n, Make or Zapier: the result is sent if a check failed, or optionally after every check.
+* Dashboard widget with the status check, and integration into the Site Health of WordPress.
+* REST API for uptime monitoring (UptimeRobot, Better Stack, Uptime Kuma etc.): a status URL with a secret token returns the result as JSON with an ID per check and the number of passed and failed checks, and the HTTP status 200 or 503.
+* WP-CLI commands for the status check, the export and import of the settings and the status of all sites of a network.
+* Multisite: overview of all sites in the network admin with filter, search and sorting, the check can be started for one or all sites, one status URL and one webhook for all sites, and the settings can be transferred to all sites, used for new sites. The settings page and the dashboard widget can be hidden for site admins.
+
+*Settings and developers*
+
+* Modern settings page with a help tab, which contains all instructions, and a preview of the link with the current settings, also before saving.
+* Import and export of the settings as JSON file.
+* Custom CSS to change the appearance, with line numbers, a check while typing (e.g. for a missing ";" or "}") and automatic formatting. On the website it is minified and only loaded together with the link.
+* Actions and filters for developers, e.g. for own checks, other page builders or the status email (see FAQ).
+* Full integration with the privacy features of WordPress
+* Compatible with WordPress Multisite
 * Compatible with [Advanced Custom Fields](https://wordpress.org/plugins/advanced-custom-fields/), [Secure Custom Fields](https://wordpress.org/plugins/secure-custom-fields/), [WPML](https://wpml.org/?utm_source=wordpressorg&utm_medium=opt-out-for-google-analytics), [Polylang](https://wordpress.org/plugins/polylang/) and [Loco Translate](https://wordpress.org/plugins/loco-translate/)
 * Also works on smartphones, provided the browser supports cookies
-* Custom CSS to change the appearance. It is only loaded together with the link (optimized loading time).
 * Available in English and German
-* Full support for PHP 8 (tested up to PHP 8.3)
+* Supports PHP 7.4 to PHP 8.4
 
-**Regular check whether the settings are still compliant with data protection law**
+**Regular check whether the opt-out still works**
 
-Have you ever edited your privacy policy page and accidentally deleted the opt-out shortcode? Or removed your Google Analytics plugin, reinstalled it later and forgot to set up the tracking code again?
+Have you ever edited your privacy policy page and accidentally deleted the opt-out shortcode? Or removed your Google Analytics plugin, reinstalled it later and forgot to set up the tracking code again? Or does an optimization plugin delay the opt-out script, so it runs too late?
 
-To keep you on the safe side, the plugin checks the settings regularly. If a setting is no longer correct, an error message appears in the WordPress admin or you receive an email.
-You can choose how often the check runs: daily, weekly or monthly.
+To keep you on the safe side, the plugin checks the settings and the website regularly. If something is no longer correct, an error message appears in the WordPress admin and in the Site Health, and you receive an email.
+You can choose how often the check runs: daily, weekly or monthly. With "Check now" in the dashboard widget or on the settings page, it runs at any time.
 
-The following settings are checked:
+The following is checked:
 
 * Opt-out function is enabled
-* Opt-out shortcode, block, Elementor widget or Divi module is present on the page
-* The page with the opt-out link is publicly available (published and not password protected)
-* A valid GA4 measurement ID was found (only the format is checked)
+* A valid GA4 measurement ID was found
+* Opt-out shortcode, block, Elementor widget or Divi module is present on the privacy policy page
+* The privacy policy page is publicly available (published and not password protected)
 * The cron job for the status check is active
+* The opt-out script is loaded on the website, and not removed or delayed by an optimization plugin
+* The opt-out link is displayed on the privacy policy page
+* Google Analytics on the website uses the measurement ID of the settings (if it is not loaded after the consent or by the Google Tag Manager)
+
+**For agencies and multisite networks**
+
+* `wp gaoo status` shows the result of the status check with WP-CLI, `wp gaoo status --run` runs it first. The command fails if a check failed, so it can be used in a monitoring script.
+* The status URL (REST API with a secret token) returns the result as JSON, with the HTTP status 200 or 503. An uptime monitoring like UptimeRobot can check it without access to the server, and your own scripts can evaluate each check by its ID. The texts are English, or translated with the parameter `lang`.
+* In a multisite network, the network admin shows the status of all sites with filter, search and sorting, and the check can be started for one or all sites. One status URL of the network shows the status of all sites, for one monitor of the whole network.
+* `wp gaoo network status` and `wp gaoo network check` show and start the check of all sites, `wp gaoo settings export` and `wp gaoo settings import` transfer the settings, e.g. in a deployment script.
+* A webhook sends the result to Slack, Microsoft Teams, Discord, Google Chat or a service like n8n, so your team sees problems without checking emails.
+* In a multisite network, the settings page and the dashboard widget can be hidden for site admins, so only super admins change the settings, while site admins still see the status.
+* The settings can be exported and imported, and in a network transferred to all sites. New sites can get the settings of a site automatically. The settings of each site (source and code of Google Analytics, privacy policy page, access data, email addresses and webhook) are not transferred.
+* With filters, you can add own checks (e.g. for a cookie banner), send the result to another service or change the recipients of the status email.
 
 **Built-in compatibility with the following plugins**
 
@@ -100,7 +140,12 @@ A [positive review](https://wordpress.org/support/plugin/opt-out-for-google-anal
 1. In the admin, go to `Settings > GA Opt-Out`.
 2. Switch on "Enable Opt-Out function", if it is not enabled yet.
 3. Select the source of the GA4 measurement ID, or enter it manually.
-4. Save the changes. Done!
+4. Select your privacy policy page, so the status check can monitor it.
+5. Save the changes.
+6. Add the link to your privacy policy: with the shortcode `[ga_optout]`, the block, the Elementor widget or the Divi module "Opt-Out for Google Analytics". Done!
+7. Optional: in "Status check", set up the email addresses, a webhook (e.g. Slack or Microsoft Teams) or the status URL for your uptime monitoring.
+
+All instructions can also be found in the help of the settings page ("Help" at the top right).
 
 **Note on the GA4 measurement ID**
 
@@ -159,6 +204,8 @@ Yes. In the Gutenberg block, the Elementor widget and the Divi module, you can e
 
 If a text is empty, the text from the plugin settings is used.
 
+With `popup_type="notice"` the popup text is shown below the link instead of a browser popup (`popup_type="alert"`), with `force_reload="yes"` or `force_reload="no"` the page is reloaded after the click or not. Without these attributes, the settings of the plugin are used. In the block, the Elementor widget and the Divi module, these options are in the settings too.
+
 = Can developers customize the plugin? =
 
 Yes. The plugin provides the following actions and filters:
@@ -207,6 +254,89 @@ add_filter( 'gaoo_force_reload', 'my_force_reload', 10, 1);
 function my_force_reload( $force ) {
 	// $force - "true" = reload the page; "false" = do not reload
 }
+
+// The texts from the settings (also: gaoo_link_activate_text, gaoo_popup_deactivate_text, gaoo_popup_activate_text)
+add_filter( 'gaoo_link_deactivate_text', 'my_link_text', 10, 1 );
+
+function my_link_text( $text ) {
+	// $text - The text from the settings
+	return $text;
+}
+
+// The individual texts of a shortcode, block, Elementor widget or Divi module
+add_filter( 'gaoo_shortcode_atts', 'my_shortcode_atts', 10, 1 );
+
+function my_shortcode_atts( $atts ) {
+	// $atts - Array with the keys link_deactivate, link_activate, popup_deactivate, popup_activate, popup_type (alert, notice) and force_reload (yes, no). An empty value uses the settings.
+	return $atts;
+}
+
+// The HTML code of the link, e.g. to add a wrapper. The class "gaoo-link" must be kept.
+add_filter( 'gaoo_shortcode_html', 'my_shortcode_html', 10, 4 );
+
+function my_shortcode_html( $html, $tracking_code, $current_status, $atts ) {
+	return '<p class="my-optout">' . $html . '</p>';
+}
+
+// The status check: the page for the check of the website (default: home page)
+add_filter( 'gaoo_frontend_check_url', 'my_frontend_check_url', 10, 1 );
+
+function my_frontend_check_url( $url ) {
+	return home_url( '/privacy-policy/' );
+}
+
+// The status check: whether the link was found on the privacy policy page, e.g. for page builders which store the content in their own format
+add_filter( 'gaoo_shortcode_found', 'my_shortcode_found', 10, 3 );
+
+function my_shortcode_found( $found, $page_id, $page ) {
+	// $found - true if the plugin found the link
+	return $found || false !== strpos( (string) get_post_meta( $page_id, 'my_builder_content', true ), '[ga_optout' );
+}
+
+// The status check: add own checks. They are shown in the dashboard widget, on the settings page and in the status email.
+add_filter( 'gaoo_status_checks', 'my_status_checks', 10, 2 );
+
+function my_status_checks( $checks, $settings ) {
+	$checks[] = array(
+		'id'      => 'cookie_banner', // Optional: unique ID of the check, e.g. for the REST API. The last check with the same ID wins.
+		'label'   => 'Cookie banner is active', // Text of the check
+		'checked' => is_plugin_active( 'my-cookie-banner/my-cookie-banner.php' ), // true = passed, false = failed, null = unknown
+		'url'     => admin_url( 'plugins.php' ), // Optional: page to fix the check
+	);
+
+	return $checks;
+}
+
+// After every status check (automatic or "Check now"), e.g. to send the result to another service
+add_action( 'gaoo_status_check_done', 'my_status_check_done', 10, 2 );
+
+function my_status_check_done( $checks, $failed ) {
+	// $checks - List of the checks with the keys "label" and "checked"
+	// $failed - true if at least one check failed
+}
+
+// Data of the webhook, sent as JSON (format: json, slack, teams or discord)
+add_filter( 'gaoo_webhook_payload', 'my_webhook_payload', 10, 4 );
+
+function my_webhook_payload( $payload, $format, $checks, $network ) {
+	// $network - true for the webhook of the network (multisite)
+	return $payload;
+}
+
+// Number of sites per page in the overview of the network (default: 50)
+add_filter( 'gaoo_network_per_page', function () {
+	return 100;
+} );
+
+// The status email, which is only sent if a check failed (also: gaoo_status_mail_subject, gaoo_status_mail_body)
+add_filter( 'gaoo_status_mail_recipients', 'my_status_mail_recipients', 10, 2 );
+
+function my_status_mail_recipients( $recipients, $checks ) {
+	// $recipients - Array of email addresses. An empty array sends no email.
+	$recipients[] = 'monitoring@example.org';
+
+	return $recipients;
+}
 `
 
 = My theme does not render shortcodes. How can I add the link with PHP? =
@@ -220,9 +350,9 @@ In this case, add the following code to your theme at the desired position:
 
 If you changed a setting, e.g. in a compatible Google Analytics plugin, the change is only detected during the next automatic check (daily, weekly or monthly, depending on your settings).
 
-You can run the check right away: go to `Settings > GA Opt-Out` and click "Save Changes".
+You can run the check right away: click "Check now" in the dashboard widget or on the settings page `Settings > GA Opt-Out`.
 
-The plugin then reads the new settings and keeps the result until the next automatic check.
+The next automatic check is then moved by the interval.
 
 = How can I react to the clicks, e.g. with another plugin? =
 
@@ -250,6 +380,11 @@ The ID `#gaoo-link` still works for compatibility, but please use the CSS class.
 **The link if the visitor has NOT opted out of tracking:**
 `.gaoo-link-deactivate { ... }`
 
+**The notice below the link, if the popup text is not shown as a browser popup:**
+`.gaoo-notice { ... }`
+
+In the block, the Elementor widget and the Divi module, you can also change the appearance in their design settings.
+
 = How can I send the status emails to multiple addresses? =
 
 Enter several email addresses, separated by commas, in the email field of the status check.
@@ -270,6 +405,76 @@ We therefore recommend:
 - Set up a server-side cron job.
 - Add the sender address to your contacts.
 
+= What does the status check check on the website? =
+
+The status check loads the home page like a visitor without consent and checks whether the opt-out script is loaded (and not removed or delayed by an optimization plugin), and whether Google Analytics is loaded with the measurement ID of the settings.
+
+If Google Analytics is loaded only after the consent or by the Google Tag Manager, it can not be found in the HTML. This is shown as an information, not as an error.
+
+If the website is protected with a password by the server (HTTP basic authentication), e.g. a staging website, enter the access data in the settings of the status check.
+
+= Can I check the status with WP-CLI, in the Site Health or for all sites of a multisite network? =
+
+Yes. `wp gaoo status` shows the result of the status check, `wp gaoo status --run` runs it first. The command fails if a check failed, so it can be used for a monitoring.
+
+More commands:
+
+* `wp gaoo settings export [<file>]` and `wp gaoo settings import <file> [--yes]`: export and import of the settings, like on the settings page.
+* `wp gaoo network status [--status=failed] [--format=json]`: the status of all sites of a multisite network. The command fails if a check of a site failed.
+* `wp gaoo network check [--site=<id>]`: starts the check of all sites or of one site in the background.
+
+The result is also shown in the Site Health of WordPress (`Tools > Site Health`), and in a multisite network the network admin shows the status of all sites (`Network Admin > Settings > GA Opt-Out`).
+
+= Can an uptime monitoring check the status (REST API)? =
+
+Yes. In the settings of the status check, create the status URL. It returns the result of the last status check as JSON:
+
+`https://example.org/wp-json/gaoo/v1/status?token=TOKEN`
+
+* HTTP status `200` if no check failed, `503` if at least one check failed, `403` if the token is wrong. You can create a new URL (the old one stops working) or disable it at any time.
+* The token can also be sent as header `X-GAOO-Token` instead of the parameter `token`.
+* The texts are English by default. With the parameter `lang` (e.g. `lang=de` or `lang=de_DE`) they are translated, if the language is installed on the website, otherwise they stay English.
+* `status` is `ok` or `failed`, `total`, `passed`, `failed`, `unknown` and `info` are the number of checks.
+* Every check has an `id`, which does not depend on the language, a `label` (translated text) and a `result`: `passed`, `failed`, `unknown` (not checked yet) or `info` (only an information, not an error).
+* `last_check` and `next_check` are in UTC (ISO 8601).
+
+Example:
+
+`{"status":"failed","total":8,"passed":6,"failed":1,"unknown":0,"info":1,"checks":[{"id":"opt_out_enabled","label":"Opt-Out Enabled","result":"passed"},{"id":"shortcode","label":"Shortcode found on the page","result":"failed"}, ...],"last_check":"2026-10-28T06:00:00+00:00","next_check":"2026-10-29T06:00:00+00:00","language":"en_US"}`
+
+IDs of the checks: `opt_out_enabled`, `measurement_id`, `shortcode`, `privacy_page_link`, `page_accessible`, `cronjob`, `website_check` (only if the website could not be loaded), `opt_out_script` and `google_analytics`. Own checks of the filter `gaoo_status_checks`: the key `id` is optional, without it they get `custom_1`, `custom_2` etc. Set an ID if you evaluate the check in your own code, because these numbers change when checks are added. The ID is unique: if several checks have the same ID, only the last one is shown, at the place of the first one. So an existing check can also be replaced.
+
+Set up the monitoring:
+
+* UptimeRobot, Better Stack, Uptime Kuma etc.: create an HTTP(S) monitor with the status URL. It reports an error if the HTTP status is not 200.
+* If your monitoring service can not check the HTTP status, use a keyword monitor with the keyword `"status":"ok"`.
+* An interval of one hour is enough. The status check itself runs daily, weekly or monthly, or with "Check now".
+
+Multisite network: in the network admin (`Network Admin > Settings > GA Opt-Out`) you can create one status URL for all sites, `https://example.org/wp-json/gaoo/v1/network?token=TOKEN`. It returns the HTTP status 503 if a check of a site failed, the number of sites per status (`ok`, `failed`, `not_checked`, `inactive`) and each site with the IDs of the failed checks. With the parameter `status` (e.g. `status=failed`) only these sites are listed.
+
+= Can the result be sent to Slack, Microsoft Teams or Discord (webhook)? =
+
+Yes. Enable "Use webhook" in the settings of the status check, enter the webhook URL and select the format. While the webhook is disabled, its fields are hidden and the URL is kept.
+
+* Slack, Mattermost, Google Chat: create an "Incoming Webhook".
+* Microsoft Teams: create a workflow "Post to a channel when a webhook request is received".
+* Discord: create a webhook in the settings of the channel (Integrations).
+* JSON for n8n, Make, Zapier or an own script: the same data as the REST API, with the name and URL of the website.
+
+In a multisite network, the network admin (`Network Admin > Settings > GA Opt-Out`) can set one webhook for all sites. It gets the result of the status check of every site with the name and URL of the site, "Send test" sends the status of all sites. The webhooks of the sites work independently of it.
+
+The result is sent if a check failed, or optionally after every check. "Send test" sends the result of the last check to test the URL. The webhook URL is secret, so it is not exported. For security, the webhook can not reach addresses of the local network, this can be allowed with the filter `http_request_host_is_external`.
+
+= Can I transfer the settings to other websites? =
+
+Yes. With "Import / export" on the settings page, the settings are downloaded as JSON file and imported on another website. The privacy policy page, the access data for the check of the website and the webhook URL are not exported.
+
+In a multisite network, the network admin (`Network Admin > Settings > GA Opt-Out`) can transfer the settings of one site to all other sites, and new sites can get the settings of a site automatically. The source and code of Google Analytics, the privacy policy page, the access data, the email addresses and the webhook of each site are kept.
+
+= Can I hide the settings from site admins in a multisite network? =
+
+Yes. In the network admin (`Network Admin > Settings > GA Opt-Out`, tab "Settings"), "Hide the settings page" hides the settings page for site admins, so only super admins can change the settings. The site admins still see the dashboard widget and can run the check, but without links to the settings. With "Hide the dashboard widget", the site admins do not see the status check in the dashboard. Both options work independently, super admins always see everything.
+
 = How do I use the plugin with Google Tag Manager? =
 
 The opt-out cookie is set according to Google's specifications, so Google Tag Manager (GTM) usually does not need to be adjusted.
@@ -285,6 +490,10 @@ Generic cookie: ga-opt-out
 Specific local storage entry: ga-disable-G-XXXXXXXXXX
 Generic local storage entry: ga-opt-out
 
+= Does the opt-out work with the Google Consent Mode? =
+
+Yes. Enable "Google Consent Mode" in the settings "Status" (it is disabled by default). Then the opt-out also denies the consent `analytics_storage`, when the link is clicked and on every page load of a visitor who has opted out. So the opt-out also works, if Google Analytics is loaded by the Google Tag Manager or with another measurement ID. On the opt-in, the consent of the cookie banner applies again after the next page load.
+
 = Liability / Disclaimer =
 
 You use this plugin at your own risk. As the website operator, you are responsible for making sure that the plugin works on your website.
@@ -293,14 +502,42 @@ For Google Tag Manager, an additional cookie named "ga-opt-out" is set.
 
 == Screenshots ==
 
-1. Settings page of the plugin (Settings > GA Opt-Out)
+1. Settings page of the plugin (Settings > GA Opt-Out), with the status check and the custom CSS
 2. Shortcode inserted in the classic editor
 3. Opt-out link with popup on the website
 4. Example of a status email
 5. Block in the block editor, with individual link and popup texts
-6. Dashboard widget with the status check
+6. Dashboard widget with the status check, also of the website
+7. Multisite: status of all sites in the network admin, with filter, search and sorting, the check can be started for one or all sites
+8. Multisite: settings of the network, with the status URL and the webhook for all sites, the template site, the transfer of the settings and the access of the site admins
 
 == Changelog ==
+
+= 2.7 =
+* Added: Website check: the status check loads the website and checks the opt-out script, the measurement ID and the opt-out link on the privacy policy page.
+* Added: Access data (HTTP basic authentication) for the website check, e.g. for staging websites.
+* Added: Webhook for Slack, Microsoft Teams, Discord, Google Chat, n8n, Make and Zapier.
+* Added: REST API for uptime monitoring, e.g. UptimeRobot.
+* Added: Option "Google Consent Mode": the opt-out also denies "analytics_storage".
+* Added: "Check now" in the dashboard widget and on the settings page.
+* Added: Status check in the Site Health of WordPress.
+* Added: WP-CLI commands for the status check, the settings and the network.
+* Added: Multisite: status of all sites, one status URL and one webhook for the network, transfer of the settings and settings for new sites.
+* Added: Multisite: the settings page and the dashboard widget can be hidden for site admins.
+* Added: Import and export of the settings.
+* Added: Popup text as a notice below the link, as an alternative to the browser popup.
+* Added: Popup type and page reload individually per block, Elementor widget, Divi module and shortcode.
+* Added: Preview of the link and help tab with all instructions on the settings page.
+* Added: Actions and filters for developers.
+* Updated: Custom CSS is checked while typing and formatted when saving.
+* Updated: Gutenberg block: colors for the link and the notice, also on hover. Existing block colors are moved to the link automatically.
+* Updated: Elementor widget: background, padding and border radius of the link.
+* Updated: Popup texts can have several lines.
+* Updated: Better accessibility of the link (space key, screen reader announcements).
+* Updated: Several UX tweaks on the settings page and in the dashboard widget.
+* Updated: Minimum requirements: WordPress 6.3 and PHP 7.4.
+* Removed: CSSTidy library. The plugin minifies the custom CSS itself.
+* Fixed: Several smaller bugs, security hardening and code quality.
 
 = 2.6 =
 * Security: Only users with the "edit_css" capability can change the custom CSS, like the "Additional CSS" of WordPress (relevant for multisite).
@@ -458,6 +695,9 @@ For Google Tag Manager, an additional cookie named "ga-opt-out" is set.
 * Initial release on February 15, 2016.
 
 == Upgrade Notice ==
+
+= 2.7 =
+Big update: the status check also checks your website, notifications by webhook (Slack, Teams, Discord), REST API for uptime monitoring, Google Consent Mode, multisite center, WP-CLI and a new settings page. Requires WordPress 6.3 and PHP 7.4.
 
 = 2.5 =
 Universal Analytics (UA-) codes are no longer supported. If you still use a UA code, switch to your Google Analytics 4 measurement ID (G-XXXXXXXXXX). Otherwise, the opt-out link will not be displayed.

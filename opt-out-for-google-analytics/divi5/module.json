@@ -152,7 +152,7 @@
                             }
                         },
                         "component": {
-                            "name": "divi/text",
+                            "name": "divi/textarea",
                             "type": "field"
                         }
                     }
@@ -180,8 +180,129 @@
                             }
                         },
                         "component": {
-                            "name": "divi/text",
+                            "name": "divi/textarea",
                             "type": "field"
+                        }
+                    }
+                }
+            }
+        },
+        "popupType": {
+            "type": "object",
+            "default": {
+                "innerContent": {
+                    "desktop": {
+                        "value": "default"
+                    }
+                }
+            },
+            "settings": {
+                "innerContent": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupSlug": "contentBehavior",
+                        "priority": 10,
+                        "render": true,
+                        "attrName": "popupType.innerContent",
+                        "label": "Show the popup text as",
+                        "features": {
+                            "sticky": false,
+                            "responsive": false,
+                            "hover": false
+                        },
+                        "component": {
+                            "name": "divi/select",
+                            "type": "field",
+                            "props": {
+                                "options": {
+                                    "default": {
+                                        "label": "Like the settings"
+                                    },
+                                    "alert": {
+                                        "label": "Browser popup"
+                                    },
+                                    "notice": {
+                                        "label": "Text below the link"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "forceReload": {
+            "type": "object",
+            "default": {
+                "innerContent": {
+                    "desktop": {
+                        "value": "default"
+                    }
+                }
+            },
+            "settings": {
+                "innerContent": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupSlug": "contentBehavior",
+                        "priority": 20,
+                        "render": true,
+                        "attrName": "forceReload.innerContent",
+                        "label": "Reload the page after the click",
+                        "features": {
+                            "sticky": false,
+                            "responsive": false,
+                            "hover": false
+                        },
+                        "component": {
+                            "name": "divi/select",
+                            "type": "field",
+                            "props": {
+                                "options": {
+                                    "default": {
+                                        "label": "Like the settings"
+                                    },
+                                    "yes": {
+                                        "label": "Yes"
+                                    },
+                                    "no": {
+                                        "label": "No"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "notice": {
+            "type": "object",
+            "selector": "{{selector}} .gaoo-notice",
+            "settings": {
+                "decoration": {
+                    "font": {
+                        "priority": 20,
+                        "component": {
+                            "props": {
+                                "groupLabel": "Notice Text",
+                                "fieldLabel": "Notice"
+                            }
+                        }
+                    },
+                    "background": {
+                        "priority": 21,
+                        "component": {
+                            "props": {
+                                "groupLabel": "Notice Background"
+                            }
+                        }
+                    },
+                    "spacing": {
+                        "priority": 22,
+                        "component": {
+                            "props": {
+                                "groupLabel": "Notice Spacing"
+                            }
                         }
                     }
                 }
@@ -192,6 +313,10 @@
         "link": {
             "subName": "link",
             "selectorSuffix": " .gaoo-link"
+        },
+        "notice": {
+            "subName": "notice",
+            "selectorSuffix": " .gaoo-notice"
         }
     },
     "settings": {
@@ -220,6 +345,18 @@
                     "name": "divi/composite",
                     "props": {
                         "groupLabel": "Popup texts"
+                    }
+                }
+            },
+            "contentBehavior": {
+                "panel": "content",
+                "priority": 30,
+                "groupName": "behavior",
+                "multiElements": true,
+                "component": {
+                    "name": "divi/composite",
+                    "props": {
+                        "groupLabel": "Behavior"
                     }
                 }
             }

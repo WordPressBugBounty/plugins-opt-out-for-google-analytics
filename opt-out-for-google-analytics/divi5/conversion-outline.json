@@ -14,7 +14,8 @@
             "default": "module.decoration.filters"
         },
         "fonts": {
-            "link": "link.decoration.font"
+            "link": "link.decoration.font",
+            "notice": "notice.decoration.font"
         },
         "height": "module.decoration.sizing",
         "margin_padding": "module.decoration.spacing",
@@ -37,12 +38,16 @@
         "free_form": "css.*.freeForm",
         "before": "css.*.before",
         "main_element": "css.*.mainElement",
-        "link": "css.*.link"
+        "link": "css.*.link",
+        "notice": "css.*.notice"
     },
     "module": {
         "link_deactivate": "linkDeactivate.innerContent.*",
         "link_activate": "linkActivate.innerContent.*",
         "popup_deactivate": "popupDeactivate.innerContent.*",
-        "popup_activate": "popupActivate.innerContent.*"
+        "popup_activate": "popupActivate.innerContent.*",
+        "popup_type": "popupType.innerContent.*",
+        "force_reload": "forceReload.innerContent.*",
+        "notice_background": "notice.decoration.background.*.color"
     }
 }

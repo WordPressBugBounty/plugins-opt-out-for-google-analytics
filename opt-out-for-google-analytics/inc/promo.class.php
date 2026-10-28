@@ -40,15 +40,16 @@
          * Render admin notices in WP admin.
          */
         public static function render_admin_notice() {
-            if ( get_transient( self::$transient_key_notices ) !== false ) {
+            // Only for admins, otherwise another user could see the notice instead of them.
+            if ( ! current_user_can( GAOO_CAPABILITY ) || get_transient( self::$transient_key_notices ) !== false ) {
                 return;
             }
 
             $data = self::get_data();
 
-            if ( ! empty( $data[ 'promo' ] ) ) {
+            if ( ! empty( $data[ 'promo' ] ) && is_array( $data[ 'promo' ] ) ) {
                 foreach ( $data[ 'promo' ] as $promo ) {
-                    if ( ! empty( $promo[ 'hide_if_active' ] ) && is_array( $promo[ 'hide_if_active' ] ) && self::should_hide( $promo[ 'hide_if_active' ] ) ) {
+                    if ( ! is_array( $promo ) || empty( $promo[ 'notice' ] ) || ( ! empty( $promo[ 'hide_if_active' ] ) && is_array( $promo[ 'hide_if_active' ] ) && self::should_hide( $promo[ 'hide_if_active' ] ) ) ) {
                         continue;
                     }
 
@@ -88,17 +89,15 @@
             $template = '';
             $data     = self::get_data();
 
-            if ( is_array( $data ) ) {
+            if ( is_array( $data ) && ! empty( $data[ 'promo' ] ) && is_array( $data[ 'promo' ] ) ) {
+                $data[ 'promo' ] = array_filter( $data[ 'promo' ], 'is_array' );
 
+                // The first pinned promotion, the keys of the list are kept.
                 if ( $pinned_only ) {
-                    $key = array_search( true, array_column( $data[ 'promo' ], 'pinned' ) );
-
-                    if ( $key === false ) {
-                        unset( $data[ 'promo' ] );
-                    }
-                    else {
-                        $data[ 'promo' ] = array( $data[ 'promo' ][ $key ] );
-                    }
+                    $pinned          = array_filter( $data[ 'promo' ], function ( $item ) {
+                        return ! empty( $item[ 'pinned' ] );
+                    } );
+                    $data[ 'promo' ] = empty( $pinned ) ? array() : array( reset( $pinned ) );
                 }
 
                 if ( ! empty( $data[ 'promo' ] ) ) {
@@ -122,7 +121,7 @@
                 return $template;
             }
 
-            echo $template;
+            echo $template; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its values.
         }
 
         /**
@@ -141,25 +140,45 @@
                 }
 
                 $body    = '';
-                $request = wp_remote_get( add_query_arg( 'lng', $lng, self::$url ), array( 'sslverify' => false ) );
+                $request = wp_remote_get( add_query_arg( 'lng', $lng, self::$url ), array( 'sslverify' => false, 'timeout' => 3 ) );
 
-                if ( is_wp_error( $request ) ) {
-                    return false;
-                }
+                if ( ! is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) == 200 ) {
+                    $body = json_decode( wp_remote_retrieve_body( $request ), true );
 
-                if ( wp_remote_retrieve_response_code( $request ) == 200 ) {
-                    $body = wp_remote_retrieve_body( $request );
-                    $body = json_decode( $body, true );
-
-                    if ( json_last_error() !== JSON_ERROR_NONE ) {
+                    if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $body ) ) {
                         $body = '';
                     }
-
-                    set_transient( self::$transient_key_cache, $body, HOUR_IN_SECONDS );
                 }
+
+                // Also an error is cached, otherwise every page of the admin would wait for the server again.
+                set_transient( self::$transient_key_cache, $body, HOUR_IN_SECONDS );
             }
 
             return empty( $body ) ? null : $body;
+        }
+
+        /**
+         * The promotion link of the dashboard widget and the help: the last promotion, if it is not hidden.
+         *
+         * @return array|null Array with the keys "link" and "link_text", otherwise null.
+         */
+        public static function get_widget_link() {
+            $data = self::get_data();
+
+            if ( empty( $data[ 'promo' ] ) || ! is_array( $data[ 'promo' ] ) ) {
+                return null;
+            }
+
+            $promo = end( $data[ 'promo' ] );
+
+            if ( empty( $promo[ 'link' ] ) || empty( $promo[ 'link_text' ] ) || ( ! empty( $promo[ 'hide_if_active' ] ) && is_array( $promo[ 'hide_if_active' ] ) && self::should_hide( $promo[ 'hide_if_active' ] ) ) ) {
+                return null;
+            }
+
+            return array(
+                'link'      => $promo[ 'link' ],
+                'link_text' => $promo[ 'link_text' ],
+            );
         }
 
         /**

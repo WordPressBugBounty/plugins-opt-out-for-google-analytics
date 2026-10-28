@@ -5,7 +5,10 @@
 
     class GAOO_Public {
 
-        private $csstidy;
+        /**
+         * @var string|null $custom_css Minified custom CSS, created on the first use.
+         */
+        private $custom_css = null;
 
         /**
          * @var GAOO_Public|null $instance Instance of this class, used by the Elementor widget.
@@ -40,16 +43,21 @@
         }
 
         /**
-         * Returns the CSSTidy instance, created on the first use.
+         * Returns the minified custom CSS. It is created once per request, because the link can be used several times on one page.
          *
-         * @return csstidy
+         * @param string $css Custom CSS from the settings.
+         *
+         * @return string Minified CSS without HTML tags.
          */
-        private function get_csstidy() {
-            if ( empty( $this->csstidy ) ) {
-                $this->csstidy = GAOO_Utils::get_csstidy( 'highest_compression' );
+        private function get_custom_css( $css ) {
+            if ( null === $this->custom_css ) {
+                require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'css.class.php';
+
+                // Strip HTML tags, so the code can't break out of the style element.
+                $this->custom_css = wp_strip_all_tags( GAOO_CSS::minify( $css ) );
             }
 
-            return $this->csstidy;
+            return $this->custom_css;
         }
 
         /**
@@ -69,9 +77,27 @@
         }
 
         /**
+         * Value "yes", "no" or empty (use the settings), also from 1/0, true/false and on/off.
+         *
+         * @param string $value Value of the attribute.
+         *
+         * @return string "yes", "no" or empty string.
+         */
+        public static function yes_no( $value ) {
+            $value = strtolower( trim( (string) $value ) );
+
+            if ( in_array( $value, array( 'yes', '1', 'true', 'on' ), true ) ) {
+                return 'yes';
+            }
+
+            return in_array( $value, array( 'no', '0', 'false', 'off' ), true ) ? 'no' : '';
+        }
+
+        /**
          * Handle the shortcode. Also used to render the Gutenberg block.
          *
-         * @param array|string $atts Shortcode attributes: link_deactivate, link_activate, popup_deactivate and popup_activate overwrite the texts from the settings. (Default: empty array)
+         * @param array|string $atts Shortcode attributes: link_deactivate, link_activate, popup_deactivate and popup_activate overwrite the texts from the settings,
+         *                           popup_type (alert, notice) and force_reload (yes, no) the behavior. Empty values use the settings. (Default: empty array)
          *
          * @return string HTML code or empty string on error.
          */
@@ -81,14 +107,28 @@
                 'link_activate'    => '',
                 'popup_deactivate' => '',
                 'popup_activate'   => '',
+                'popup_type'       => '',
+                'force_reload'     => '',
             ), $atts, 'ga_optout' );
 
             $atts      = array_map( 'trim', $atts );
+
+            // The popup texts can have several lines. If the shortcode is in the content (e.g. Divi 4), WordPress adds a <br /> to the line breaks (wpautop), which would be shown in the popup.
+            foreach ( array( 'popup_deactivate', 'popup_activate' ) as $key ) {
+                $atts[ $key ] = preg_replace( '/<br\s*\/?>(\r?\n)?/i', "\n", $atts[ $key ] );
+            }
+
+            // Individual texts of the shortcode, the block, the Elementor widget and the Divi module, e.g. for an own multilingual setup. Empty texts use the settings.
+            $atts = array_map( 'strval', shortcode_atts( array_fill_keys( array( 'link_deactivate', 'link_activate', 'popup_deactivate', 'popup_activate', 'popup_type', 'force_reload' ), '' ), (array) apply_filters( 'gaoo_shortcode_atts', $atts ) ) );
+
+            // Display of the popup text (browser popup or notice below the link) and reload after the click. Empty values use the settings.
+            $atts[ 'popup_type' ]   = in_array( strtolower( $atts[ 'popup_type' ] ), array( 'alert', 'notice' ), true ) ? strtolower( $atts[ 'popup_type' ] ) : '';
+            $atts[ 'force_reload' ] = self::yes_no( $atts[ 'force_reload' ] );
             $form_data = GAOO_Utils::get_options();
             $ua_code   = GAOO_Utils::get_code( $form_data[ 'ga_plugin' ], $form_data[ 'ua_code' ] );
 
             // Disable shortcode if status is deactivated or set to manual but empty UA-Code
-            if ( $form_data[ 'status' ] == 'off' || empty( $ua_code ) ) {
+            if ( ! GAOO_Utils::is_opt_out_enabled( $form_data ) || empty( $ua_code ) ) {
                 return '';
             }
 
@@ -112,6 +152,14 @@
             // Individual texts are passed to the JavaScript by data attributes, because there can be several links on one page.
             $data_attributes = '';
 
+            if ( '' !== $atts[ 'popup_type' ] ) {
+                $data_attributes .= ' data-gaoo-popup-type="' . esc_attr( $atts[ 'popup_type' ] ) . '"';
+            }
+
+            if ( '' !== $atts[ 'force_reload' ] ) {
+                $data_attributes .= ' data-gaoo-reload="' . esc_attr( $atts[ 'force_reload' ] ) . '"';
+            }
+
             foreach ( array( 'deactivate', 'activate' ) as $status ) {
                 if ( ! empty( $atts[ 'link_' . $status ] ) ) {
                     $data_attributes .= ' data-gaoo-' . $status . '="' . esc_attr( $atts[ 'link_' . $status ] ) . '"';
@@ -125,10 +173,20 @@
             $link_text = empty( $atts[ 'link_' . $current_status ] ) ? $json_data[ 'link_' . $current_status ] : $atts[ 'link_' . $current_status ];
             $html      = '<a href="#" role="button" id="gaoo-link" class="gaoo-link gaoo-link-' . esc_attr( $current_status ) . '"' . $data_attributes . '>' . esc_html( $link_text ) . '</a>';
 
-            if ( 'on' === $form_data[ 'custom_css_status' ] && ! empty( $form_data[ 'custom_css' ] ) && $this->get_csstidy()->parse( $form_data[ 'custom_css' ] ) ) {
-                // Strip HTML tags, so the code can't break out of the style element.
-                $html .= '<style type="text/css">' . wp_strip_all_tags( $this->get_csstidy()->print->plain() ) . '</style>';
+            // Basic style of the notice below the link, it can be changed with the custom CSS.
+            $is_notice = '' === $atts[ 'popup_type' ] ? 'on' === $form_data[ 'popup_notice' ] : 'notice' === $atts[ 'popup_type' ];
+            $styles    = $is_notice ? '.gaoo-notice{display:block;white-space:pre-line;margin-top:.5em}' : '';
+
+            if ( 'on' === $form_data[ 'custom_css_status' ] && ! empty( $form_data[ 'custom_css' ] ) ) {
+                $styles .= $this->get_custom_css( $form_data[ 'custom_css' ] );
             }
+
+            if ( '' !== $styles ) {
+                $html .= '<style type="text/css">' . $styles . '</style>';
+            }
+
+            // HTML code of the link (and the custom CSS), e.g. to add a wrapper. The class "gaoo-link" is needed by the JavaScript.
+            $html = (string) apply_filters( 'gaoo_shortcode_html', $html, $ua_code, $current_status, $atts );
 
             do_action( 'gaoo_after_shortcode', $ua_code, $current_status );
 
@@ -144,12 +202,18 @@
 
             do_action( 'gaoo_before_head_script', $ua_code );
 
-            if ( $form_data[ 'status' ] == 'on' && ! empty( $ua_code ) ) {
-                echo "<script>var disableStr = 'ga-disable-{$ua_code}'; if (document.cookie.indexOf(disableStr + '=true') > -1) { window[disableStr] = true; }</script>";
+            if ( GAOO_Utils::is_opt_out_enabled( $form_data ) && ! empty( $ua_code ) ) {
+                // Before Google Analytics: if the cookie was deleted (e.g. by the browser after 7 days), it is restored from the local storage.
+                // Google Consent Mode (if enabled): deny "analytics_storage" for visitors with opt-out. It is sent again after loading, so it comes after the default of a cookie banner.
+                // The global "disableStr" is kept for compatibility with own code, everything else is local.
+                $consent = empty( $form_data[ 'consent_mode' ] ) ? '' : " window.dataLayer = window.dataLayer || []; var consent = function () { window.dataLayer.push(arguments); }; consent('consent', 'update', {analytics_storage: 'denied'}); window.addEventListener('load', function () { consent('consent', 'update', {analytics_storage: 'denied'}); });";
+
+                echo "<script>var disableStr = 'ga-disable-" . esc_js( $ua_code ) . "'; (function () { var expires = '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/'; try { if (document.cookie.indexOf(disableStr + '=true') === -1 && window.localStorage && localStorage.getItem(disableStr) === 'true') { document.cookie = disableStr + expires; document.cookie = 'ga-opt-out' + expires; } } catch (e) {} if (document.cookie.indexOf(disableStr + '=true') > -1) { window[disableStr] = true;" . $consent . " } })();</script>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static code, the code is escaped.
             }
 
             if ( ! empty( $form_data[ 'tracking_code' ] ) ) {
-                echo $form_data[ 'tracking_code' ];
+                // Only users with the capability "unfiltered_html" can save the tracking code.
+                echo $form_data[ 'tracking_code' ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
 
             do_action( 'gaoo_after_head_script', $ua_code );

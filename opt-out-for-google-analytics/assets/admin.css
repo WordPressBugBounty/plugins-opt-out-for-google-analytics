@@ -1,235 +1,192 @@
-/* Opt-Out for Google Analytics - Admin styles. All rules are scoped, because this file is loaded on all admin pages. */
+/* Opt-Out for Google Analytics - Styles of the settings page and the network admin. The styles of the status check
+   (widget) are in widget.css, which is loaded before. All rules are scoped. */
 
 #gaoo .hide {
     display: none;
 }
 
-.mce-ico.mce-i-gaoptout {
-    background-image: url('icon.png');
-}
-
-/* Rating stars (plugin list and settings page) */
-.gaoo-rate-stars {
-    display: inline-block;
-    color: #ffb900;
-    position: relative;
-    top: 3px;
-}
-
-.gaoo-rate-stars svg {
-    fill: #ffb900;
-}
-
-.gaoo-rate-stars svg:hover ~ svg {
-    fill: none;
-}
-
-/* Status check: dashboard widget and settings page */
-#ga-opt-out .inside {
-    margin: 0;
-    padding: 0;
-}
-
-.gaoo-widget {
-    --gaoo-color: #00a32a;
-    --gaoo-bg: #edfaef;
-}
-
-.gaoo-widget-todo {
-    --gaoo-color: #d63638;
-    --gaoo-bg: #fcf0f1;
-}
-
-.gaoo-widget-dontknow {
-    --gaoo-color: #996800;
-    --gaoo-bg: #fcf9e8;
-}
-
-.gaoo-widget-summary {
-    display: flex;
+/* Overview of all sites in the network admin */
+.gaoo-network-state {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 16px 12px;
-}
-
-.gaoo-widget-summary-icon.dashicons {
-    flex: none;
-    width: 40px;
-    height: 40px;
-    font-size: 22px;
-    line-height: 40px;
-    text-align: center;
-    border-radius: 50%;
-    color: var(--gaoo-color);
-    background: var(--gaoo-bg);
-}
-
-.gaoo-widget-summary strong {
-    display: block;
-    font-size: 14px;
-    color: #1d2327;
-}
-
-.gaoo-widget-summary span {
-    color: #646970;
-}
-
-.gaoo-widget-progress {
-    height: 4px;
-    margin: 0 16px 8px;
-    border-radius: 2px;
-    background: #f0f0f1;
-    overflow: hidden;
-}
-
-.gaoo-widget-progress span {
-    display: block;
-    height: 100%;
-    border-radius: 2px;
-    background: var(--gaoo-color);
-}
-
-.gaoo-widget-checks {
-    margin: 0;
-    padding: 0 16px;
-}
-
-.gaoo-widget-checks li {
-    margin: 0;
-    padding: 2px 0;
-    border-bottom: 1px solid #f0f0f1;
-}
-
-.gaoo-widget .gaoo-widget-check-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 -8px;
-    padding: 8px;
-    border-radius: 6px;
-    color: #1d2327;
-    text-decoration: none;
-}
-
-/* Rows with a link: the whole row is clickable */
-.gaoo-widget a.gaoo-widget-check-row {
-    transition: background-color .15s;
-}
-
-.gaoo-widget a.gaoo-widget-check-row:hover,
-.gaoo-widget a.gaoo-widget-check-row:focus {
-    background: #f6f7f7;
-    color: #1d2327;
-    box-shadow: none;
-}
-
-.gaoo-widget a.gaoo-widget-check-row:focus-visible {
-    outline: 2px solid var(--wp-admin-theme-color, #2271b1);
-    outline-offset: -2px;
-}
-
-.gaoo-widget-check-arrow {
-    margin-left: auto;
-    color: #646970;
-}
-
-.gaoo-widget a.gaoo-widget-check-row:hover .gaoo-widget-check-arrow,
-.gaoo-widget a.gaoo-widget-check-row:focus .gaoo-widget-check-arrow {
-    color: var(--wp-admin-theme-color, #2271b1);
-}
-
-.gaoo-widget-checks li:last-child {
-    border-bottom: 0;
-}
-
-.gaoo-widget-checks .dashicons {
-    flex: none;
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-}
-
-.gaoo-widget-check-check .gaoo-widget-check-icon {
-    color: #00a32a;
-}
-
-.gaoo-widget-check-todo .gaoo-widget-check-icon {
-    color: #d63638;
-}
-
-.gaoo-widget-check-dontknow .gaoo-widget-check-icon {
-    color: #dba617;
-}
-
-.gaoo-widget-check-todo .gaoo-widget-check-label {
+    gap: 4px;
     font-weight: 600;
 }
 
-.gaoo-widget-checks code {
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 12px;
-    background: #f0f0f1;
+.gaoo-network-todo {
+    color: #d63638;
 }
 
-.gaoo-widget-footer {
+.gaoo-network-done {
+    color: #00a32a;
+}
+
+.gaoo-network-failed {
+    margin: 0;
+}
+
+/* Tabs of the network admin: status of all sites and settings */
+.gaoo-tabs {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 12px 16px;
-    border-top: 1px solid #f0f0f1;
-    background: #f6f7f7;
-    color: #646970;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 24px;
+    border-bottom: 1px solid var(--gaoo-border);
 }
 
-.gaoo-widget-next .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-    vertical-align: text-bottom;
-}
-
-.gaoo-widget-footer .button {
-    margin-left: auto;
-}
-
-.gaoo-widget .gaoo-widget-promo {
-    display: flex;
+.gaoo-tabs a {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
-    border-top: 1px solid #f0f0f1;
+    margin-bottom: -1px;
+    padding: 10px 14px;
+    border-bottom: 2px solid transparent;
+    color: #50575e;
+    font-size: 14px;
+    font-weight: 500;
     text-decoration: none;
 }
 
-.gaoo-widget-promo .dashicons {
-    font-size: 16px;
+.gaoo-tabs a:hover {
+    color: #1e1e1e;
+}
+
+.gaoo-tabs a.is-current {
+    border-bottom-color: var(--gaoo-accent);
+    color: var(--gaoo-accent);
+    font-weight: 600;
+}
+
+/* Number of sites with a failed check */
+.gaoo-tabs-count {
+    box-sizing: border-box;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #d63638;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: center;
+}
+
+/* Filter by status, like the lists of WordPress, but not floating */
+.gaoo-network-filter.subsubsub {
+    float: none;
+    margin: 0 0 12px;
+}
+
+.gaoo-network-filter .current {
+    color: var(--gaoo-accent);
+}
+
+/* Button to check all sites and the search in one row */
+.gaoo-network-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin: 0 0 12px;
+}
+
+.gaoo-network-search {
+    display: flex;
+    gap: 6px;
+}
+
+.gaoo-network-search input[type="search"] {
+    min-width: 220px;
+    border-radius: var(--gaoo-field-radius);
+}
+
+.gaoo-network-table th.sortable,
+.gaoo-network-table th.sorted {
+    padding: 0;
+}
+
+.gaoo-network-table th.sortable a,
+.gaoo-network-table th.sorted a {
+    padding: 12px;
+}
+
+.gaoo-network-pages {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.gaoo-network-pages .description {
+    margin-right: 6px;
+}
+
+/* The table has 4 columns, so the overview is wider than the settings page */
+.gaoo-network .gaoo-main {
+    max-width: 1100px;
+}
+
+.gaoo-network-table {
+    overflow-x: auto;
+    border: 1px solid var(--gaoo-border);
+    border-radius: var(--gaoo-field-radius);
+}
+
+.gaoo-network-table .widefat {
+    border: 0;
+}
+
+.gaoo-network-table td,
+.gaoo-network-table th {
+    padding: 12px;
+}
+
+.gaoo-network-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 0;
+}
+
+.gaoo-network td .button-small {
+    margin-top: 4px;
+}
+
+/* Button with icon: icon and text are centered vertically. Not the copy buttons, which have only an icon. */
+.gaoo-network .button:not(.gaoo-copy):has(.dashicons) {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.gaoo-network .button:not(.gaoo-copy) .dashicons {
     width: 16px;
     height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    /* The glyph itself is drawn slightly below the center of its box */
+    transform: translateY(-1px);
 }
 
-.gaoo-widget-promo .dashicons-external {
-    margin-left: auto;
-    opacity: .6;
-}
-
-/* Settings page: framed white stage with rounded corners and one centered column, like the connectors page */
-body.settings_page_gaoo,
-body.settings_page_gaoo #wpwrap {
+/* Settings page and network overview: framed white stage with rounded corners and one centered column, like the connectors page */
+body.gaoo-stage,
+body.gaoo-stage #wpwrap {
     background: var(--gaoo-frame, #1d2327);
 }
 
-body.settings_page_gaoo #wpcontent {
+body.gaoo-stage #wpcontent {
     padding-left: 0;
 }
 
-body.settings_page_gaoo #wpbody-content {
+body.gaoo-stage #wpbody-content {
     padding-bottom: 0;
 }
 
-body.settings_page_gaoo #wpfooter {
+body.gaoo-stage #wpfooter {
     display: none;
 }
 
@@ -239,6 +196,9 @@ body.settings_page_gaoo #wpfooter {
     --gaoo-field-radius: 6px;
     --gaoo-accent: var(--wp-admin-theme-color, #2271b1);
     --gaoo-menu-width: 160px;
+    /* Inner spacing of the stage and of the cards, smaller on small screens */
+    --gaoo-stage-pad: 32px;
+    --gaoo-card-pad: 24px;
     box-sizing: border-box;
     margin: 0;
     background: #fff;
@@ -251,44 +211,66 @@ body.settings_page_gaoo #wpfooter {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding: 0 32px;
+    padding: 0 var(--gaoo-stage-pad);
 }
 
 /* The stage stays fixed and scrolls inside, so the rounded corners are always visible */
-body.settings_page_gaoo .gaoo-settings {
+body.gaoo-stage .gaoo-settings {
     position: fixed;
     z-index: 1;
     top: var(--wp-admin--admin-bar--height, 32px);
-    right: 8px;
     bottom: 8px;
-    left: var(--gaoo-menu-width);
+    /* Logical sides, so the stage is also next to the menu in right-to-left languages */
+    inset-inline-start: var(--gaoo-menu-width);
+    inset-inline-end: 8px;
     overflow: hidden;
 }
 
-body.settings_page_gaoo .gaoo-settings-scroll {
+body.gaoo-stage .gaoo-settings-scroll {
     height: 100%;
     overflow-y: auto;
     overscroll-behavior: contain;
 }
 
-body.settings_page_gaoo.folded .gaoo-settings {
+/* If the admin menu is higher than the window, WordPress scrolls the whole page. Then the stage is part of the page,
+   so there is only one scrollbar. The class is set by the JavaScript. */
+body.gaoo-stage.gaoo-page-scroll .gaoo-settings {
+    position: relative;
+    inset: auto;
+    margin-block: 0 8px;
+    margin-inline: 0 8px;
+    /* clip instead of hidden: the stage is no scroll container, so the save bar sticks to the window */
+    overflow: clip;
+}
+
+body.gaoo-stage.gaoo-page-scroll .gaoo-settings,
+body.gaoo-stage.gaoo-page-scroll .gaoo-settings-scroll {
+    min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px) - 8px);
+}
+
+body.gaoo-stage.gaoo-page-scroll .gaoo-settings-scroll {
+    height: auto;
+    overflow: visible;
+}
+
+body.gaoo-stage.folded .gaoo-settings {
     --gaoo-menu-width: 36px;
 }
 
 @media screen and (max-width: 960px) {
-    body.settings_page_gaoo.auto-fold .gaoo-settings {
+    body.gaoo-stage.auto-fold .gaoo-settings {
         --gaoo-menu-width: 36px;
     }
 }
 
-/* Rounded form fields, like the cards */
+/* Rounded form fields and buttons, like the cards */
 .gaoo-settings input[type="text"],
 .gaoo-settings input[type="email"],
+.gaoo-settings input[type="password"],
+.gaoo-settings input[type="url"],
+.gaoo-settings input[type="search"],
 .gaoo-settings select,
-.gaoo-settings textarea {
-    border-radius: var(--gaoo-field-radius);
-}
-
+.gaoo-settings textarea,
 .gaoo-settings .button {
     border-radius: var(--gaoo-field-radius);
 }
@@ -299,14 +281,15 @@ body.settings_page_gaoo.folded .gaoo-settings {
     margin-right: auto;
 }
 
+/* Header and footer use the whole width of the stage */
 .gaoo-header {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 8px 24px;
-    margin: 0 -32px 24px;
-    padding: 20px 32px;
+    margin: 0 calc(-1 * var(--gaoo-stage-pad)) 24px;
+    padding: 20px var(--gaoo-stage-pad);
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -322,29 +305,63 @@ body.settings_page_gaoo.folded .gaoo-settings {
     color: #757575;
 }
 
-.gaoo-settings .gaoo-rate {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    color: #646970;
+/* Legal note below the title: small, it is only a note */
+.gaoo-header .gaoo-disclaimer {
+    margin-top: 2px;
     font-size: 12px;
-    text-decoration: none;
+    color: #8c8f94;
+}
+
+/* Rating link in the footer, after "Made for you by" */
+.gaoo-settings .gaoo-rate {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .gaoo-rate .gaoo-rate-stars {
     top: 0;
+    display: inline-flex;
 }
 
-.gaoo-main > form {
-    margin: 0;
+.gaoo-footer .gaoo-rate-stars svg {
+    width: 12px;
+    height: 12px;
 }
 
-.gaoo-card {
-    margin: 0 0 16px;
-    padding: 24px;
+.gaoo-footer-separator {
+    margin: 0 6px;
+}
+
+.gaoo-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin: auto calc(-1 * var(--gaoo-stage-pad)) 0;
+    padding: 16px var(--gaoo-stage-pad);
+    border-top: 1px solid #f0f0f0;
+    color: #757575;
+    font-size: 12px;
+}
+
+/* Space between the content and the footer. The footer itself is pushed to the bottom by margin-top: auto. */
+.gaoo-settings-scroll > .gaoo-main {
+    width: 100%;
+    padding-bottom: 32px;
+}
+
+/* Cards and promotion */
+.gaoo-card,
+.gaoo-main .gaoo-promotion-box {
+    margin: 0 0 3em;
     background: #fff;
     border: 1px solid var(--gaoo-border);
     border-radius: var(--gaoo-radius);
+}
+
+.gaoo-card {
+    padding: var(--gaoo-card-pad);
 }
 
 .gaoo-card-flush {
@@ -352,59 +369,429 @@ body.settings_page_gaoo.folded .gaoo-settings {
     overflow: hidden;
 }
 
-.gaoo-card h2 {
-    margin: 0 0 16px;
+/* The title is a header bar of the card, so the cards can be distinguished better. */
+.gaoo-card > h2 {
+    margin: calc(-1 * var(--gaoo-card-pad)) calc(-1 * var(--gaoo-card-pad)) 20px;
+    padding: 14px var(--gaoo-card-pad);
+    background: #f6f7f7;
+    border-bottom: 1px solid var(--gaoo-border);
+    border-radius: calc(var(--gaoo-radius) - 1px) calc(var(--gaoo-radius) - 1px) 0 0;
     font-size: 15px;
     font-weight: 600;
 }
 
 .gaoo-card h2 + .description {
-    margin: -12px 0 16px;
+    margin: -4px 0 16px;
 }
 
 .gaoo-card .description {
     color: #646970;
 }
 
-/* Shortcode */
-.gaoo-shortcode {
-    padding: 16px 24px;
+.gaoo-main .gaoo-promotion-box {
+    overflow: hidden;
+    transition: border-color .15s;
 }
 
-.gaoo-shortcode p {
+.gaoo-main .gaoo-promotion-box:hover {
+    border-color: #949494;
+}
+
+.gaoo-main .gaoo-promotion-link {
+    display: block;
+    line-height: 0;
+}
+
+.gaoo-main .gaoo-promotion-box img {
+    width: 100%;
+    height: auto;
+}
+
+.gaoo-main .gaoo-promotion-description {
+    padding: 0 24px;
+}
+
+/* Shortcode */
+.gaoo-shortcode .gaoo-shortcode-copy {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
-    margin: 0;
+    margin: 0 0 8px;
+}
+
+.gaoo-shortcode-copy-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .gaoo-shortcode code {
     padding: 4px 8px;
     border-radius: 4px;
-    cursor: pointer;
 }
 
+.gaoo-shortcode .description {
+    margin: 0 0 8px;
+}
+
+.gaoo-shortcode .gaoo-shortcode-help {
+    margin: 0;
+}
+
+/* Copy buttons with icon */
 .gaoo-copy.button {
     display: inline-flex;
+    flex: none;
     align-items: center;
-    justify-content: center;
 }
 
-.gaoo-settings .gaoo-shortcode .gaoo-copy.button .dashicons {
-    display: block;
+/* Small icons (16px) of the settings and the network page */
+.gaoo-help-promo .dashicons,
+.gaoo-toggle-text .dashicons {
+    flex: none;
+    width: 16px;
+    height: 16px;
     font-size: 16px;
+}
+
+.gaoo-settings .gaoo-copy.button .dashicons {
+    display: block;
+    flex: none;
     width: 16px;
     height: 16px;
     margin: 0;
+    font-size: 16px;
     /* Otherwise the icon inherits the line height of the button and the glyph sits too low */
     line-height: 1;
-    /* The glyph itself is drawn slightly below the center of its box */
+}
+
+/* The glyph itself is drawn slightly below the center of its box */
+.gaoo-settings .gaoo-shortcode .gaoo-copy.button .dashicons {
     transform: translateY(-1px);
 }
 
 .gaoo-clipboard:not(:empty) {
     margin-left: 4px;
+}
+
+/* Help tabs of WordPress ("Help" at the top), moved into the stage by the JavaScript. */
+body.gaoo-stage #screen-meta {
+    margin: 0 calc(-1 * var(--gaoo-stage-pad));
+    border-width: 0 0 1px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* The toggle stays visible at the top when scrolling. It has no height, so it lies over the right side of the header
+   instead of taking its own row. The stage is a flex column, so it is aligned to the right like in WordPress. */
+body.gaoo-stage #screen-meta-links {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    align-self: flex-end;
+    height: 0;
+    margin: 0;
+    overflow: visible;
+}
+
+/* If the page scrolls (not the stage), the toggle stays below the admin bar. */
+body.gaoo-stage.gaoo-page-scroll #screen-meta-links {
+    top: var(--wp-admin--admin-bar--height, 32px);
+}
+
+body.gaoo-stage #screen-meta-links .screen-meta-toggle {
+    margin: 0;
+    border-top: 0;
+    border-radius: 0 0 4px 4px;
+}
+
+.gaoo-help-promo {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #dcdcde;
+}
+
+.gaoo-help-promo .dashicons {
+    margin-right: 4px;
+    vertical-align: text-bottom;
+}
+
+.gaoo-help h3 {
+    margin: 1.4em 0 .5em;
+    font-size: 14px;
+}
+
+.gaoo-help p,
+.gaoo-help li,
+.gaoo-help dd {
+    max-width: 720px;
+}
+
+.gaoo-help code {
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.gaoo-help-atts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 8px 16px;
+    align-items: baseline;
+    margin: 12px 0 16px;
+}
+
+.gaoo-help-atts dt,
+.gaoo-help-atts dd {
+    margin: 0;
+}
+
+/* Code with a copy button in the upper right corner */
+.gaoo-help-code {
+    position: relative;
+    max-width: 760px;
+    margin: 8px 0 16px;
+}
+
+.gaoo-help-code pre {
+    margin: 0;
+    padding: 10px 48px 10px 12px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.gaoo-help-code pre code {
+    padding: 0;
+    background: none;
+}
+
+.gaoo-help-code .gaoo-copy.button {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+}
+
+/* Navigation of the sections, stays at the top while scrolling */
+.gaoo-nav {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 24px;
+    padding: 8px 0;
+    background: #fff;
+}
+
+/* While the navigation stays at the top, a white area with a line and a shadow separates it from the content,
+   over the whole width of the stage. */
+.gaoo-nav.is-stuck::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    /* From the left to the right edge of the stage: the width of the stage (container) and its padding */
+    left: calc((100% - 100cqw) / 2 - var(--gaoo-stage-pad));
+    width: calc(100cqw + 2 * var(--gaoo-stage-pad));
+    background: #fff;
+    border-bottom: 1px solid #dcdcde;
+    box-shadow: 0 6px 12px -6px rgba(0, 0, 0, .18);
+}
+
+/* The width of the stage is the reference of the area of the navigation. With classic scrollbars (e.g. Windows) the width
+   can contain the vertical scrollbar, so the area is clipped at the side and creates no horizontal scrollbar. */
+.gaoo-settings-scroll {
+    container-type: inline-size;
+}
+
+body.gaoo-stage .gaoo-settings-scroll {
+    overflow-x: hidden;
+}
+
+.gaoo-nav-title {
+    align-self: center;
+    margin-right: 6px;
+    color: #1e1e1e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.gaoo-nav-sentinel {
+    display: block;
+    height: 0;
+}
+
+.gaoo-nav a {
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #50575e;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.gaoo-nav a:hover,
+.gaoo-nav a:focus-visible {
+    background: #f0f0f1;
+    color: #1e1e1e;
+}
+
+.gaoo-nav a.is-current {
+    background: var(--gaoo-accent);
+    color: #fff;
+}
+
+/* If the page scrolls (not the stage), the navigation stays below the admin bar. */
+body.gaoo-page-scroll .gaoo-nav {
+    top: var(--wp-admin--admin-bar--height, 32px);
+}
+
+/* The sections are not hidden below the navigation after a jump */
+.gaoo-main [id^="gaoo-section-"] {
+    /* The height of the navigation (and the admin bar), set by the JavaScript */
+    scroll-margin-top: var(--gaoo-nav-offset, 64px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .gaoo-settings-scroll {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Settings of the sites in the network admin */
+.gaoo-network-template select {
+    min-width: 320px;
+    max-width: 100%;
+}
+
+.gaoo-network-template .description {
+    margin: 6px 0 0;
+}
+
+.gaoo-network-sites .gaoo-network-transfer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.gaoo-network-sites .gaoo-network-transfer h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+/* Fields of the webhook, hidden while it is disabled */
+.gaoo-webhook-fields[hidden],
+.gaoo-section-fields[hidden],
+.gaoo-toggle .gaoo-if-on[hidden] {
+    display: none;
+}
+
+/* Link to the help in the description of a toggle */
+.gaoo-toggle .gaoo-if-on {
+    font-size: inherit;
+}
+
+.gaoo-section-fields {
+    margin-top: 12px;
+}
+
+.gaoo-webhook-fields {
+    margin-top: 4px;
+}
+
+.gaoo-webhook .gaoo-webhook-switch {
+    padding-top: 8px;
+    border-top: 0;
+}
+
+/* Result of the last request of the webhook */
+.gaoo-webhook-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.gaoo-webhook-ok {
+    color: #00a32a;
+}
+
+.gaoo-webhook-error {
+    color: #d63638;
+}
+
+.gaoo-webhook select {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Import and export of the settings, side by side */
+.gaoo-transfer-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px 32px;
+    margin-top: 16px;
+}
+
+.gaoo-transfer-column h3,
+.gaoo-preview-wrap h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+.gaoo-transfer-column .description {
+    margin: 0;
+}
+
+.gaoo-transfer-column input[type="file"] {
+    max-width: 100%;
+}
+
+.gaoo-preview-wrap {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gaoo-border);
+}
+
+.gaoo-preview-wrap .description {
+    margin: 0 0 12px;
+}
+
+.gaoo-transfer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 0;
+}
+
+.gaoo-transfer .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.gaoo-transfer .button .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* Preview of the link in a sandbox, the height is set by the JavaScript */
+.gaoo-preview {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 80px;
+    border: 1px solid var(--gaoo-border);
+    border-radius: var(--gaoo-field-radius);
+    background: #fff;
 }
 
 /* Fields */
@@ -414,6 +801,9 @@ body.settings_page_gaoo.folded .gaoo-settings {
 
 .gaoo-field > label {
     display: block;
+    /* Only the text is clickable, not the whole width. */
+    width: fit-content;
+    max-width: 100%;
     margin-bottom: 6px;
     font-weight: 600;
 }
@@ -450,75 +840,132 @@ body.settings_page_gaoo.folded .gaoo-settings {
     line-height: 1;
 }
 
-/* Footer */
-.gaoo-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 8px 24px;
-    margin: auto -32px 0;
-    padding: 16px 32px;
-    border-top: 1px solid #f0f0f0;
-    color: #757575;
-    font-size: 12px;
-}
-
-/* Space between the content and the footer. The footer itself is pushed to the bottom by margin-top: auto. */
-.gaoo-settings-scroll > .gaoo-main {
-    width: 100%;
-    padding-bottom: 32px;
-}
-
 .gaoo-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0 24px;
 }
 
+/* Fields that span the whole row, e.g. the popup texts, which can be longer. */
+.gaoo-grid > .gaoo-field-full {
+    grid-column: 1 / -1;
+}
+
+/* Fields with a button to empty them */
 .gaoo-input-clear {
     position: relative;
     display: block;
 }
 
-.gaoo-input-clear input {
-    padding-right: 32px;
+/* Full width (not 99% like .large-text), so the button has the same distance to the border of the field. */
+.gaoo-input-clear input,
+.gaoo-input-clear textarea {
+    width: 100%;
+    padding-right: 36px;
 }
 
-.gaoo-empty-popup {
+.gaoo-input-clear textarea {
+    display: block;
+    resize: vertical;
+}
+
+.gaoo-settings .gaoo-empty-popup {
     position: absolute;
     top: 50%;
-    right: 6px;
-    transform: translateY(-50%);
+    inset-inline-end: 10px;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 4px;
     color: #646970;
+    font-size: 20px;
+    line-height: 1;
+    transform: translateY(-50%);
     cursor: pointer;
 }
 
-.gaoo-empty-popup:hover {
+.gaoo-settings .gaoo-empty-popup:hover {
     color: #d63638;
 }
 
-.gaoo-empty-popup.empty {
+.gaoo-settings .gaoo-empty-popup:focus-visible {
+    outline: 2px solid var(--gaoo-accent);
+    outline-offset: 1px;
+}
+
+/* In a multi-line field, the button stays in the upper right corner. */
+.gaoo-settings .gaoo-input-clear textarea + .gaoo-empty-popup {
+    top: 5px;
+    transform: none;
+}
+
+/* A read-only field (e.g. synchronized with the admin email) can't be emptied. */
+.gaoo-settings .gaoo-input-clear [readonly] + .gaoo-empty-popup,
+.gaoo-settings .gaoo-empty-popup.empty {
     display: none;
 }
 
-/* Toggle switch, based on a real checkbox */
-.gaoo-toggle {
+/* Access data for the check of the website, below the switches of the status check */
+.gaoo-auth {
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f1;
+}
+
+.gaoo-auth > .description {
+    margin: 4px 0 12px;
+}
+
+.gaoo-auth .gaoo-field {
+    margin-bottom: 0;
+}
+
+.gaoo-auth + .gaoo-auth {
+    margin-top: 16px;
+}
+
+/* URL of the status for a monitoring, with a copy button */
+.gaoo-api-url {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
+}
+
+.gaoo-api-actions {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 0;
+}
+
+/* Toggle switch, based on a real checkbox. The row has the full width, the label only the width of its content. */
+.gaoo-toggle-row {
     padding: 12px 0;
     border-top: 1px solid #f0f0f1;
-    cursor: pointer;
 }
 
-.gaoo-card h2 + .gaoo-toggle,
-.gaoo-field + .gaoo-toggle {
-    border-top: 0;
+.gaoo-card h2 + .gaoo-toggle-row,
+.gaoo-field + .gaoo-toggle-row {
     padding-top: 0;
+    border-top: 0;
 }
 
-.gaoo-toggle:last-child {
+/* Same space above and below the line after a description. */
+.gaoo-card > .description + .gaoo-toggle-row {
+    margin-top: 12px;
+}
+
+.gaoo-toggle-row:last-child {
     padding-bottom: 0;
+}
+
+.gaoo-toggle {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 100%;
+    vertical-align: top;
+    cursor: pointer;
 }
 
 .gaoo-toggle input[type="checkbox"] {
@@ -533,7 +980,7 @@ body.settings_page_gaoo.folded .gaoo-settings {
     border-radius: 10px;
     background: #fff;
     box-shadow: none;
-    transition: background .15s, border-color .15s;
+    transition: background .15s, border-color .15s, box-shadow .15s;
 }
 
 .gaoo-toggle input[type="checkbox"]::before {
@@ -559,18 +1006,31 @@ body.settings_page_gaoo.folded .gaoo-settings {
     background: #fff;
 }
 
+/* Hovering the label also highlights the switch. */
+.gaoo-toggle:hover input[type="checkbox"]:not(:disabled) {
+    border-color: var(--gaoo-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gaoo-accent) 20%, transparent);
+}
+
+.gaoo-toggle:hover input[type="checkbox"]:not(:checked):not(:disabled)::before {
+    background: var(--gaoo-accent);
+}
+
 .gaoo-toggle input[type="checkbox"]:focus-visible {
     outline: 2px solid var(--gaoo-accent);
     outline-offset: 2px;
 }
 
-.gaoo-toggle-text strong {
+.gaoo-toggle-text strong,
+.gaoo-toggle-text .description {
     display: block;
+}
+
+.gaoo-toggle-text strong {
     font-weight: 600;
 }
 
 .gaoo-toggle-text .description {
-    display: block;
     margin-top: 2px;
 }
 
@@ -579,9 +1039,6 @@ body.settings_page_gaoo.folded .gaoo-settings {
 }
 
 .gaoo-toggle-text .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
     vertical-align: text-bottom;
 }
 
@@ -607,18 +1064,19 @@ body.settings_page_gaoo.folded .gaoo-settings {
     border-color: #949494;
 }
 
-.gaoo-source:has(input:checked) {
-    background: #f0f6fc;
+/* Selected source, and the fields of the manual entry look like one block with it */
+.gaoo-source:has(input:checked),
+.gaoo-source:has(input:checked) + .gaoo-source-details {
     background: color-mix(in srgb, var(--gaoo-accent) 8%, #fff);
+}
+
+.gaoo-source:has(input:checked) {
     border-color: transparent;
 }
 
-/* Selected manual entry and its fields look like one block */
 .gaoo-source:has(input:checked) + .gaoo-source-details {
     margin-top: -8px;
     border-radius: 0 0 var(--gaoo-radius) var(--gaoo-radius);
-    background: #f0f6fc;
-    background: color-mix(in srgb, var(--gaoo-accent) 8%, #fff);
 }
 
 .gaoo-source:has(input:checked):has(+ .gaoo-source-details:not(.hide)) {
@@ -639,8 +1097,12 @@ body.settings_page_gaoo.folded .gaoo-settings {
     opacity: .6;
 }
 
-.gaoo-source input[type="radio"] {
+.gaoo-source input[type="radio"],
+.gaoo-source .button {
     flex: none;
+}
+
+.gaoo-source input[type="radio"] {
     margin: 0;
 }
 
@@ -649,17 +1111,13 @@ body.settings_page_gaoo.folded .gaoo-settings {
     min-width: 0;
 }
 
-.gaoo-source-text strong {
+.gaoo-source-text strong,
+.gaoo-source-text .description {
     display: block;
 }
 
 .gaoo-source-text .description {
-    display: block;
     font-size: 12px;
-}
-
-.gaoo-source .button {
-    flex: none;
 }
 
 .gaoo-source-details {
@@ -683,19 +1141,22 @@ body.settings_page_gaoo.folded .gaoo-settings {
     color: #50575e;
 }
 
-.gaoo-toggle + .gaoo-readonly-notice,
-.gaoo-toggle + .gaoo-css {
-    margin-top: 12px;
-}
-
 .gaoo-css {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 260px;
     gap: 24px;
 }
 
+.gaoo-css-editor > .description {
+    margin: 8px 0 0;
+}
+
 .gaoo-css-classes dl {
     margin: 8px 0 0;
+}
+
+.gaoo-css-classes > .description {
+    margin: 4px 0 0;
 }
 
 .gaoo-css-classes dt {
@@ -707,6 +1168,160 @@ body.settings_page_gaoo.folded .gaoo-settings {
     color: #646970;
 }
 
+/* Classes can be added to the CSS by click, used classes are highlighted. */
+.gaoo-settings .gaoo-css-class {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+}
+
+.gaoo-settings .gaoo-css-class:focus-visible {
+    outline: 2px solid var(--wp-admin-theme-color, #2271b1);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.gaoo-settings .gaoo-css-class:disabled {
+    cursor: default;
+}
+
+.gaoo-settings .gaoo-css-class code {
+    padding: 3px 6px;
+    border: 1px solid var(--gaoo-border);
+    border-radius: 4px;
+    transition: border-color .15s, background-color .15s;
+}
+
+.gaoo-settings .gaoo-css-class:hover code,
+.gaoo-settings .gaoo-css-class:focus-visible code {
+    border-color: var(--wp-admin-theme-color, #2271b1);
+}
+
+.gaoo-settings .gaoo-css-class:disabled code {
+    border-color: transparent;
+}
+
+.gaoo-settings .gaoo-css-class.is-used code {
+    background: #edfaef;
+    border-color: #00a32a;
+}
+
+.gaoo-css-class-used {
+    display: none;
+    color: #00a32a;
+}
+
+.gaoo-css-class.is-used .gaoo-css-class-used {
+    display: inline-block;
+}
+
+.gaoo-css-class:not(.is-used) .gaoo-css-class-used-text {
+    display: none;
+}
+
+/* Code field with line numbers. The field and the numbers have the same font and line height, the numbers scroll with the field.
+   The padding keeps the scrollbar of the field away from the rounded corners, otherwise its ends would be cut off. */
+.gaoo-code {
+    display: flex;
+    overflow: hidden;
+    padding-right: 3px;
+    background: #fff;
+    border: 1px solid #8c8f94;
+    border-radius: var(--gaoo-field-radius);
+}
+
+.gaoo-code:focus-within {
+    border-color: var(--wp-admin-theme-color, #2271b1);
+    box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
+}
+
+.gaoo-code.has-errors {
+    border-color: #d63638;
+}
+
+.gaoo-code.has-errors:focus-within {
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+.gaoo-code-lines,
+.gaoo-settings .gaoo-code textarea {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.gaoo-code-lines {
+    /* The numbers don't affect the height of the field (contain: size), the width is set by the JavaScript. */
+    contain: size;
+    flex: none;
+    box-sizing: border-box;
+    width: calc(3ch + 17px);
+    overflow: hidden;
+    padding: 11px 8px 31px;
+    background: #f6f7f7;
+    border-right: 1px solid #dcdcde;
+    color: #8c8f94;
+    text-align: right;
+    user-select: none;
+}
+
+.gaoo-code-lines span {
+    display: block;
+}
+
+.gaoo-code-lines .is-error {
+    margin: 0 -8px;
+    padding: 0 8px;
+    background: #fcf0f1;
+    color: #d63638;
+    font-weight: 600;
+}
+
+.gaoo-settings .gaoo-code textarea {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 3px 0;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    white-space: pre;
+    overflow-wrap: normal;
+    resize: vertical;
+}
+
+.gaoo-code:has(textarea[readonly]),
+.gaoo-code:has(textarea[readonly]) .gaoo-code-lines {
+    background: #f6f7f7;
+}
+
+/* Errors of the CSS check, while typing. A click jumps to the line. */
+.gaoo-settings .gaoo-css-check .gaoo-css-error {
+    display: block;
+    width: 100%;
+    margin: 8px 0 0;
+    padding: 6px 10px;
+    background: #fcf0f1;
+    border: 0;
+    border-left: 3px solid #d63638;
+    border-radius: 0 4px 4px 0;
+    color: #8a2424;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.gaoo-settings .gaoo-css-check .gaoo-css-error:hover,
+.gaoo-settings .gaoo-css-check .gaoo-css-error:focus-visible {
+    background: #facfd2;
+}
+
 /* Save bar */
 .gaoo-savebar {
     position: sticky;
@@ -715,7 +1330,7 @@ body.settings_page_gaoo.folded .gaoo-settings {
     display: flex;
     justify-content: flex-end;
     margin: 0 0 16px;
-    padding: 12px 24px;
+    padding: 12px var(--gaoo-card-pad);
     background: rgba(255, 255, 255, .92);
     border: 1px solid var(--gaoo-border);
     border-radius: var(--gaoo-radius);
@@ -723,86 +1338,45 @@ body.settings_page_gaoo.folded .gaoo-settings {
     backdrop-filter: blur(4px);
 }
 
-/* Promotion */
-.gaoo-main .gaoo-promotion-box {
-    margin: 0 0 16px;
-    background: #fff;
-    border: 1px solid var(--gaoo-border);
-    border-radius: var(--gaoo-radius);
-    overflow: hidden;
-    transition: border-color .15s;
-}
-
-.gaoo-main .gaoo-promotion-box:hover {
-    border-color: #949494;
-}
-
-.gaoo-main .gaoo-promotion-link {
-    display: block;
-    line-height: 0;
-}
-
-.gaoo-main .gaoo-promotion-box img {
-    width: 100%;
-    height: auto;
-}
-
-.gaoo-main .gaoo-promotion-description {
-    padding: 0 24px;
-}
-
-/* Smaller screens */
+/* Smaller screens: no frame, the stage is part of the normal page again */
 @media screen and (max-width: 782px) {
     .gaoo-settings {
-        margin: 0;
+        --gaoo-stage-pad: 16px;
+        --gaoo-card-pad: 16px;
         border-radius: 0;
     }
 
-    .gaoo-footer {
-        margin-left: -16px;
-        margin-right: -16px;
-        padding: 16px;
-    }
-
-    /* No frame on small screens: the stage is part of the normal page again */
-    body.settings_page_gaoo .gaoo-settings {
+    body.gaoo-stage .gaoo-settings {
         position: static;
         overflow: visible;
     }
 
-    body.settings_page_gaoo .gaoo-settings-scroll {
+    body.gaoo-stage .gaoo-settings-scroll {
         height: auto;
         overflow: visible;
-        padding: 0 16px;
     }
 
     .gaoo-header {
-        margin: 0 -16px 16px;
-        padding: 16px;
+        margin-bottom: 16px;
+        padding-block: 16px;
     }
 
-    .gaoo-card {
-        padding: 16px;
-    }
-
-    .gaoo-card-flush {
-        padding: 0;
-    }
-
-    .gaoo-settings .gaoo-rate {
-        align-items: flex-start;
+    .gaoo-card > h2 {
+        margin-bottom: 16px;
+        padding-block: 12px;
     }
 
     .gaoo-grid,
-    .gaoo-css {
+    .gaoo-css,
+    .gaoo-help-atts {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gaoo-help-atts dd {
+        margin-bottom: 8px;
     }
 
     .gaoo-source {
         flex-wrap: wrap;
-    }
-
-    .gaoo-savebar {
-        padding: 12px 16px;
     }
 }

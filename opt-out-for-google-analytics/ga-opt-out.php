@@ -3,9 +3,9 @@
      * Plugin Name: Opt-Out for Google Analytics (DSGVO / GDPR)
      * Plugin URI: https://www.schweizersolutions.com/?utm_source=wordpress&utm_medium=plugin&utm_campaign=plugin_uri
      * Description: Adds the possibility for the user to opt out from Google Analytics. The user will not be tracked by Google Analytics on this site until he allows it again, clears his cookies or uses a different browser.
-     * Version: 2.6
-     * Requires at least: 5.8
-     * Requires PHP: 7.0
+     * Version: 2.7
+     * Requires at least: 6.3
+     * Requires PHP: 7.4
      * Author: Schweizer Solutions GmbH
      * Author URI: https://www.schweizersolutions.com/?utm_source=wordpress&utm_medium=plugin&utm_campaign=author_uri
      * License: GPL-2.0+
@@ -81,6 +81,30 @@
 
             // Load activator for MU support
             add_action( 'wp_initialize_site', array( new GAOO_Activator, 'new_blog' ), 100 );
+
+            // New sites get the settings of the template site, if one is selected in the network admin.
+            add_action( 'wp_initialize_site', array( 'GAOO_Utils', 'apply_network_template' ), 110 );
+
+            // Status for a monitoring: /wp-json/gaoo/v1/status
+            add_action( 'rest_api_init', array( $this, 'register_api' ) );
+
+            // Commands "wp gaoo status", "wp gaoo settings" and "wp gaoo network" for WP-CLI
+            if ( defined( 'WP_CLI' ) && WP_CLI ) {
+                require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'cli.class.php';
+
+                WP_CLI::add_command( 'gaoo', 'GAOO_CLI' );
+                WP_CLI::add_command( 'gaoo settings', 'GAOO_CLI_Settings' );
+                WP_CLI::add_command( 'gaoo network', 'GAOO_CLI_Network' );
+            }
+        }
+
+        /**
+         * Register the REST API endpoint of the status. The file is only loaded for REST requests.
+         */
+        public function register_api() {
+            require_once GAOO_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'api.class.php';
+
+            GAOO_API::register();
         }
 
         /**
@@ -129,8 +153,11 @@
          * @param string $plugin Activated plugin
          */
         public function activated_plugin( $plugin ) {
-            if ( isset( $_REQUEST[ 'action' ] ) && $_REQUEST[ 'action' ] == 'activate' && $plugin == plugin_basename( __FILE__ ) ) {
-                exit( wp_redirect( esc_url( admin_url( 'options-general.php?page=gaoo' ) ) ) );
+            // The nonce is checked by WordPress before the plugin is activated.
+            if ( isset( $_REQUEST[ 'action' ] ) && 'activate' === sanitize_key( wp_unslash( $_REQUEST[ 'action' ] ) ) && $plugin == plugin_basename( __FILE__ ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                // Network activation: the overview of the network, otherwise the settings page.
+                wp_safe_redirect( is_network_admin() ? network_admin_url( 'settings.php?page=gaoo-network' ) : admin_url( 'options-general.php?page=gaoo' ) );
+                exit;
             }
         }
     }

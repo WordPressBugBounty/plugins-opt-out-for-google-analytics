@@ -8,24 +8,17 @@ if ( ! class_exists( 'GAOO_Deactivator' ) ):
 		/**
 		 * Init the deactivation of this plugin, with multisite support.
 		 *
-		 * @global wpdb $wpdb        WordPress database abstraction object.
 		 *
 		 * @param bool $network_wide Activation is network wide or not
 		 */
 		public static function init( $network_wide ) {
-			global $wpdb;
-
 			// Run the deactivation with multisite support.
 			if ( is_multisite() && $network_wide ) {
-				$old_blog = $wpdb->blogid;
-				$blogids  = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
-
-				foreach ( $blogids as $blog_id ) {
+				foreach ( get_sites( array( 'fields' => 'ids', 'number' => 0 ) ) as $blog_id ) {
 					switch_to_blog( $blog_id );
 					self::deactivate();
+					restore_current_blog();
 				}
-
-				switch_to_blog( $old_blog );
 
 				return;
 			}

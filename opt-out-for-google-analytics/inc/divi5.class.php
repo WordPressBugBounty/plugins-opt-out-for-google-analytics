@@ -76,6 +76,8 @@
                 'link_activate'    => self::get_text( $attrs, 'linkActivate' ),
                 'popup_deactivate' => self::get_text( $attrs, 'popupDeactivate' ),
                 'popup_activate'   => self::get_text( $attrs, 'popupActivate' ),
+                'popup_type'       => self::get_text( $attrs, 'popupType' ),
+                'force_reload'     => self::get_text( $attrs, 'forceReload' ),
             ) );
 
             // Nothing to display, e.g. the opt-out function is disabled.
@@ -138,6 +140,9 @@
                     $elements->style( array(
                         'attrName' => 'link',
                     ) ),
+                    $elements->style( array(
+                        'attrName' => 'notice',
+                    ) ),
                     CssStyle::style( array(
                         'selector'  => $order_class,
                         'attr'      => isset( $attrs[ 'css' ] ) ? $attrs[ 'css' ] : array(),
@@ -175,6 +180,72 @@
         }
 
         /**
+         * Translate the texts of module.json (labels, groups and options), because JSON can't contain translatable strings.
+         * The default option of the behavior shows the value of the settings, like the block and the Elementor widget.
+         *
+         * @param array $metadata Content of module.json.
+         * @param array $options  Settings of the plugin.
+         *
+         * @return array Metadata with translated texts.
+         */
+        public static function translate_metadata( $metadata, $options ) {
+            if ( ! is_array( $metadata ) ) {
+                return $metadata;
+            }
+
+            $yes           = __( 'Yes', 'opt-out-for-google-analytics' );
+            $no            = __( 'No', 'opt-out-for-google-analytics' );
+            $browser_popup = __( 'Browser popup', 'opt-out-for-google-analytics' );
+            $text_below    = __( 'Text below the link', 'opt-out-for-google-analytics' );
+            /* translators: %s: value of the settings */
+            $like_settings = __( 'Like the settings (%s)', 'opt-out-for-google-analytics' );
+
+            $texts = array(
+                'Displays the link, which allows the visitor to disallow or allow the tracking by Google Analytics.' => __( 'Displays the link, which allows the visitor to disallow or allow the tracking by Google Analytics.', 'opt-out-for-google-analytics' ),
+                'Leave empty to use the text from the settings.' => __( 'Leave empty to use the text from the settings.', 'opt-out-for-google-analytics' ),
+                'Link texts'                                     => __( 'Link texts', 'opt-out-for-google-analytics' ),
+                'Popup texts'                                    => __( 'Popup texts', 'opt-out-for-google-analytics' ),
+                'Behavior'                                       => __( 'Behavior', 'opt-out-for-google-analytics' ),
+                'Text of link for deactivate'                    => __( 'Text of link for deactivate', 'opt-out-for-google-analytics' ),
+                'Text of link for activate'                      => __( 'Text of link for activate', 'opt-out-for-google-analytics' ),
+                'Popup Text for deactivate'                      => __( 'Popup Text for deactivate', 'opt-out-for-google-analytics' ),
+                'Popup Text for activate'                        => __( 'Popup Text for activate', 'opt-out-for-google-analytics' ),
+                'Show the popup text as'                         => __( 'Show the popup text as', 'opt-out-for-google-analytics' ),
+                'Reload the page after the click'                => __( 'Reload the page after the click', 'opt-out-for-google-analytics' ),
+                'Browser popup'                                  => $browser_popup,
+                'Text below the link'                            => $text_below,
+                'Yes'                                            => $yes,
+                'No'                                             => $no,
+                'Link'                                           => __( 'Link', 'opt-out-for-google-analytics' ),
+                'Link Text'                                      => __( 'Link Text', 'opt-out-for-google-analytics' ),
+                'Notice'                                         => __( 'Notice', 'opt-out-for-google-analytics' ),
+                'Notice Text'                                    => __( 'Notice Text', 'opt-out-for-google-analytics' ),
+                'Notice Background'                              => __( 'Notice Background', 'opt-out-for-google-analytics' ),
+                'Notice Spacing'                                 => __( 'Notice Spacing', 'opt-out-for-google-analytics' ),
+            );
+
+            // Default option of the behavior, with the value of the settings.
+            $defaults = array(
+                'popupType'   => sprintf( $like_settings, 'on' === $options[ 'popup_notice' ] ? $text_below : $browser_popup ),
+                'forceReload' => sprintf( $like_settings, empty( $options[ 'force_reload' ] ) ? $no : $yes ),
+            );
+
+            foreach ( $defaults as $attribute => $label ) {
+                if ( isset( $metadata[ 'attributes' ][ $attribute ][ 'settings' ][ 'innerContent' ][ 'item' ][ 'component' ][ 'props' ][ 'options' ][ 'default' ] ) ) {
+                    $metadata[ 'attributes' ][ $attribute ][ 'settings' ][ 'innerContent' ][ 'item' ][ 'component' ][ 'props' ][ 'options' ][ 'default' ][ 'label' ] = $label;
+                }
+            }
+
+            array_walk_recursive( $metadata, function ( &$value, $key ) use ( $texts ) {
+                if ( is_string( $value ) && in_array( $key, array( 'label', 'groupLabel', 'fieldLabel', 'description' ), true ) && isset( $texts[ $value ] ) ) {
+                    $value = $texts[ $value ];
+                }
+            } );
+
+            return $metadata;
+        }
+
+        /**
          * Register the script for the Visual Builder of Divi 5, with the metadata and the data for the preview.
          */
         public static function enqueue_builder_script() {
@@ -193,12 +264,14 @@
                     'enqueue_top_window' => false,
                     'enqueue_app_window' => true,
                     'data_app_window'    => array(
-                        'metadata'          => wp_json_file_decode( self::get_folder() . 'module.json', array( 'associative' => true ) ),
+                        'metadata'          => self::translate_metadata( wp_json_file_decode( self::get_folder() . 'module.json', array( 'associative' => true ) ), $options ),
                         'conversionOutline' => wp_json_file_decode( self::get_folder() . 'conversion-outline.json', array( 'associative' => true ) ),
                         'preview'           => array(
                             'isActive'       => ( $options[ 'status' ] != 'off' && ! empty( GAOO_Utils::get_code( $options[ 'ga_plugin' ], $options[ 'ua_code' ] ) ) ),
                             // The texts are stored HTML encoded.
-                            'linkDeactivate' => html_entity_decode( $options[ 'link_deactivate' ], ENT_QUOTES, 'UTF-8' ),
+                            'linkDeactivate'  => html_entity_decode( $options[ 'link_deactivate' ], ENT_QUOTES, 'UTF-8' ),
+                            'popupDeactivate' => html_entity_decode( $options[ 'popup_deactivate' ], ENT_QUOTES, 'UTF-8' ),
+                            'popupNotice'     => 'on' === $options[ 'popup_notice' ],
                             'notice'         => esc_html__( 'The link is not displayed on the website, because the opt-out function is disabled or no valid Google Analytics 4 measurement ID was found.', 'opt-out-for-google-analytics' ),
                         ),
                     ),

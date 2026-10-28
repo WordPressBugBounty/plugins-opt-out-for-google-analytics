@@ -1,6 +1,9 @@
 <?php
     // If this file is called directly, abort.
     defined( 'WPINC' ) || die;
+
+    // The template is included in a method, so the variables are local and not global.
+    // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
 
 <div class="gaoo-promotion-wrap">
@@ -8,7 +11,7 @@
 <?php foreach ( $promo as $item ): ?>
 
     <?php
-    if ( GAOO_Promo::should_hide( $item[ 'hide_if_active' ] ) ):
+    if ( GAOO_Promo::should_hide( isset( $item[ 'hide_if_active' ] ) ? $item[ 'hide_if_active' ] : array() ) ):
         continue;
     endif;
     ?>

@@ -4,7 +4,7 @@ Tags: google analytics, opt-out, dsgvo, gdpr, ga4
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.7
+Stable tag: 2.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.schweizersolutions.com/?utm_source=wordpressorg&utm_medium=plugin&utm_campaign=donate
@@ -512,6 +512,9 @@ For Google Tag Manager, an additional cookie named "ga-opt-out" is set.
 8. Multisite: settings of the network, with the status URL and the webhook for all sites, the template site, the transfer of the settings and the access of the site admins
 
 == Changelog ==
+
+= 2.7.1 =
+* Fixed: Loading of the language files.
 
 = 2.7 =
 * Added: Website check: the status check loads the website and checks the opt-out script, the measurement ID and the opt-out link on the privacy policy page.

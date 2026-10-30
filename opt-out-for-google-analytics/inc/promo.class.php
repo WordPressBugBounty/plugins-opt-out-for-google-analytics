@@ -140,7 +140,7 @@
                 }
 
                 $body    = '';
-                $request = wp_remote_get( add_query_arg( 'lng', $lng, self::$url ), array( 'sslverify' => false, 'timeout' => 3 ) );
+                $request = wp_remote_get( add_query_arg( 'lng', $lng, self::$url ), array( 'sslverify' => false, 'timeout' => 5 ) );
 
                 if ( ! is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) == 200 ) {
                     $body = json_decode( wp_remote_retrieve_body( $request ), true );
@@ -150,8 +150,9 @@
                     }
                 }
 
-                // Also an error is cached, otherwise every page of the admin would wait for the server again.
-                set_transient( self::$transient_key_cache, $body, HOUR_IN_SECONDS );
+                // The data are cached for one hour. An error only for a few minutes, so a single failed request (e.g. right after an update)
+                // does not hide the promotion for long, but not every page of the admin waits for the server again.
+                set_transient( self::$transient_key_cache, $body, '' === $body ? 10 * MINUTE_IN_SECONDS : HOUR_IN_SECONDS );
             }
 
             return empty( $body ) ? null : $body;

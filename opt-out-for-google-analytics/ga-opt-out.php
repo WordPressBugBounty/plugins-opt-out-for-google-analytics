@@ -3,7 +3,7 @@
      * Plugin Name: Opt-Out for Google Analytics (DSGVO / GDPR)
      * Plugin URI: https://www.schweizersolutions.com/?utm_source=wordpress&utm_medium=plugin&utm_campaign=plugin_uri
      * Description: Adds the possibility for the user to opt out from Google Analytics. The user will not be tracked by Google Analytics on this site until he allows it again, clears his cookies or uses a different browser.
-     * Version: 2.7
+     * Version: 2.7.1
      * Requires at least: 6.3
      * Requires PHP: 7.4
      * Author: Schweizer Solutions GmbH
